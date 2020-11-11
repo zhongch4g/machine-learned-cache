@@ -1,6 +1,7 @@
 import sys
 import os
-
+import numpy as np
+from sklearn.linear_model import SGDClassifier
 
 class Node:
     def __init__(self, b_num):
@@ -13,6 +14,7 @@ class Node:
         self.HIR_next = None
         self.recency = False # Rmax boundary
         self.recency0 = False # LRU boundary
+        self.reuse_distance = sys.maxsize
 
 class Trace:
     def __init__(self, tName):
@@ -43,7 +45,8 @@ class Trace:
         return self.memory_size
 
 class LIRS_Replace_Algorithm:
-    def __init__(self, vm_size, trace_dict, mem_size, trace_size):
+    def __init__(self, vm_size, trace_dict, mem_size, trace_size, model):
+        self.model = model
         self.trace_size = trace_size
         self.page_table = trace_dict # {block number : Node}
         self.MEMORY_SIZE = mem_size
@@ -66,6 +69,9 @@ class LIRS_Replace_Algorithm:
         self.page_hit = 0
 
         self.last_ref_block = -1
+
+        self.count_exampler = 0
+        self.train = False
 
     def remove_stack_Q(self, b_num):
         if (not self.page_table[b_num].HIR_next and not self.page_table[b_num].HIR_prev):
@@ -144,6 +150,17 @@ class LIRS_Replace_Algorithm:
         self.Rmax0.recency0 = False
         self.Rmax0 = self.Rmax0.LIRS_prev
         return self.Rmax0
+
+    def get_reuse_distance(self, ref_block):
+        ptr = self.Stack_S_Head
+        count = 0
+        while (ptr):
+            count += 1
+            if (ptr.block_number == ref_block):
+                return count
+            ptr = ptr.LIRS_next
+        raise("get reuse distance error!")
+
     
     def print_information(self):
         print ("memory size : ", self.MEMORY_SIZE)
@@ -153,18 +170,17 @@ class LIRS_Replace_Algorithm:
         print ("page fault : ", self.page_fault)
         print ("Hit ratio: ", self.page_hit/(self.page_fault + self.page_hit))
     
-    def print_stack(self, vtime):
-        if (5000 > vtime or vtime > 5003):
+    def print_stack(self, v_time):
+        if (v_time < 50000):
             return 
         ptr = self.Stack_S_Head
         while (ptr):
-            # print("R" if ptr == self.Rmax else "", end="")
-            print("H" if ptr.is_hir else "L", end="")
-            print("R" if ptr.is_resident else "N", end="")
+            print("R" if ptr == self.Rmax0 else "", end="")
+            # print("H" if ptr.is_hir else "L", end="")
+            # print("R" if ptr.is_resident else "N", end="")
             print(ptr.block_number, end="-")
             ptr = ptr.LIRS_next
         print ()
-
 
     def LIRS(self, v_time, ref_block):
         if (ref_block == self.last_ref_block):
@@ -197,7 +213,24 @@ class LIRS_Replace_Algorithm:
         if (self.Rmax0 and not self.page_table[ref_block].recency0):
             if (self.Rmax0 != self.page_table[ref_block]):
                 self.find_new_Rmax0()
+
+        # type feature
+        if (self.page_table[ref_block].recency0):
+            p_type = 0
+        elif (self.page_table[ref_block].recency):
+            p_type = 1
+        else:
+            p_type = 2
+
+        if (self.page_table[ref_block].recency):
+            self.count_exampler += 1
+            self.model.partial_fit(np.array([[self.page_table[ref_block].reuse_distance, p_type]]), np.array([1 if self.page_table[ref_block].recency else -1], ), classes = np.array([1, -1]))
+            self.page_table[ref_block].reuse_distance = self.get_reuse_distance(ref_block)  # Setting the reuse distance for that block
         
+        # when use the data to predict the model
+        if (self.count_exampler == self.MEMORY_SIZE // 5):
+            self.train = True
+
         self.remove_stack_S(ref_block)
         self.add_stack_S(ref_block)
 
@@ -214,12 +247,26 @@ class LIRS_Replace_Algorithm:
             self.Rmax.recency = False
             self.find_new_Rmax()
         elif (self.page_table[ref_block].is_hir):
-            self.add_stack_Q(ref_block) # func():
+            if (not self.train):
+                self.add_stack_Q(ref_block) # func():
+            else:
+                feature = np.array([[self.page_table[ref_block].reuse_distance], [p_type]])
+                prediction = self.model.predict(feature.reshape(1, -1))
+                # if (prediction == -1):
+                #     raise("prediction 0")
+                if prediction == 1:
+                    self.page_table[ref_block].is_hir = False
+                    self.add_stack_Q(self.Rmax.block_number) # func():
+                    self.Rmax.is_hir = True
+                    self.Rmax.recency = False
+                    self.find_new_Rmax()
+                else:
+                    self.add_stack_Q(ref_block) # func():
 
         self.page_table[ref_block].recency = True
         self.page_table[ref_block].recency0 = True
 
-        # self.print_stack()
+        # self.print_stack(v_time)
 
 
 
@@ -229,9 +276,10 @@ def main(tName):
     # get the trace
     trace, trace_dict, trace_size = trace_obj.get_trace()
     memory_size = trace_obj.get_parameter()
-    memory_size = [100]
+    memory_size = [1000]
     for memory in memory_size:
-        lirs_replace = LIRS_Replace_Algorithm(trace_obj.vm_size, trace_dict, memory, trace_size)
+        model = SGDClassifier(loss="perceptron", eta0=1, learning_rate="constant", penalty=None)
+        lirs_replace = LIRS_Replace_Algorithm(trace_obj.vm_size, trace_dict, memory, trace_size, model)
         for v_time, ref_block in enumerate(trace):
             lirs_replace.LIRS(v_time, ref_block)
         lirs_replace.print_information()

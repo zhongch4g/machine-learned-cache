@@ -102,7 +102,7 @@ class LIRS:
 
             if not self.pg_table[ref_block].is_resident:
                 self.pg_faults += 1
-                print (i, ref_block, 0)
+                # print (i, ref_block, 0)
                 if self.free_mem == 0:
                     evicted_hir = self.hir_stack.popitem(last=False)
                     self.pg_table[evicted_hir[1]].is_resident = False
@@ -117,7 +117,7 @@ class LIRS:
 
             if self.pg_table[ref_block].is_resident:
                 self.pg_hits += 1
-                print (i, ref_block, 1)
+                # print (i, ref_block, 1)
 
             if self.lir_stack.get(ref_block):
                 del self.lir_stack[ref_block]
@@ -181,7 +181,6 @@ if __name__ == "__main__":
     for line in inputFile:
         if not line == "*\n":
             MAX_MEMORY.append(int(line))
-    MAX_MEMORY = [100]
     for mem in MAX_MEMORY:
         lirs = LIRS(trace, mem, result, info)
         lirs.LIRS_Replace_Algorithm()
