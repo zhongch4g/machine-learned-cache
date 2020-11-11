@@ -130,7 +130,7 @@ class LIRS:
             if self.lir_stack.get(ref_block):
                 # use the real value and last reference features to update the model
                 # print(np.array([[self.pg_table[ref_block].reuse_distance]]), np.array([-1 if self.pg_table[ref_block].is_hir else 1]))
-                model.partial_fit(np.array([[self.pg_table[ref_block].reuse_distance]]), np.array([-1 if self.pg_table[ref_block].in_stack else 1], ), classes = np.array([1, -1]))
+                model.partial_fit(np.array([[self.pg_table[ref_block].reuse_distance]]), np.array([1 if self.pg_table[ref_block].in_stack else -1], ), classes = np.array([1, -1]))
                 self.count_exampler += 1
                 counter = 0
                 for j in self.lir_stack.keys():  # Getting the reuse distance

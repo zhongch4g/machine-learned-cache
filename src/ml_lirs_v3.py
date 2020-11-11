@@ -1,235 +1,257 @@
 import sys
 import os
-import codecs
-from collections import deque
-from collections import OrderedDict
-from sklearn.linear_model import SGDClassifier
-import numpy as np
 
-class Block:
-    def __init__(self, Block_Number, is_resident, is_hir_block, in_stack):
-        self.b_num = Block_Number
-        self.is_resident = is_resident
-        self.is_hir = is_hir_block
-        self.in_stack = in_stack
-        self.reuse_distance = -sys.maxsize
-        self.ref_times = 0
-        self.last_status = None # LIR HIR
 
-HIR_PERCENTAGE = 1.0
-MIN_HIR_MEMORY = 2
+class Node:
+    def __init__(self, b_num):
+        self.block_number = b_num
+        self.is_resident = False
+        self.is_hir = True
+        self.LIRS_prev = None
+        self.LIRS_next = None
+        self.HIR_prev = None
+        self.HIR_next = None
+        self.recency = False # Rmax boundary
+        self.recency0 = False # LRU boundary
 
-class LIRS:
-    def __init__(self, trace, mem, result, info):
-        self.trace = trace
-        # Init the queue
-        self.pg_table = deque()
-        for x in range(vm_size + 1):
-            # [Block Number, is_resident, is_hir_block, in_stack]
-            block = Block(x, False, True, False)
-            self.pg_table.append(block)
+class Trace:
+    def __init__(self, tName):
+        self.trace_path = '../trace/' + tName
+        self.parameter_path = '../cache_size/' + tName
+        self.trace = []
+        self.memory_size = []
+        self.vm_size = -1
+        self.trace_dict = dict()
 
-        self.HIR_SIZE = mem * (HIR_PERCENTAGE / 100)
+    def get_trace(self):
+        print ("get trace from ", self.trace_path)
+        with open(self.trace_path, "r") as f:
+            for line in f.readlines():
+                if not line == "*\n" and not line.strip() == "":
+                    block_number = int(line)
+                    self.trace.append(block_number)
+                    self.trace_dict[block_number] = Node(block_number)
+        self.vm_size = max(self.trace)
+        return self.trace, self.trace_dict, len(self.trace)
+
+    def get_parameter(self):
+        print ("get trace from ", self.parameter_path)
+        with open(self.parameter_path, "r") as f:
+            for line in f.readlines():
+                if not line == "*\n":
+                    self.memory_size.append(int(line))
+        return self.memory_size
+
+class LIRS_Replace_Algorithm:
+    def __init__(self, vm_size, trace_dict, mem_size, trace_size):
+        self.trace_size = trace_size
+        self.page_table = trace_dict # {block number : Node}
+        self.MEMORY_SIZE = mem_size
+        self.Free_Memory_Size = mem_size
+        HIR_PERCENTAGE = 1.0
+        MIN_HIR_MEMORY = 2
+        self.HIR_SIZE = mem_size * (HIR_PERCENTAGE / 100)
         if self.HIR_SIZE < MIN_HIR_MEMORY:
             self.HIR_SIZE = MIN_HIR_MEMORY
-        # Init End
+        
+        self.Stack_S_Head = None
+        self.Sack_S_Tail = None
+        self.Stack_Q_Head = None
+        self.Stack_Q_Tail = None
 
-        #Creating stacks and lists
-        self.lir_stack = OrderedDict()
-        self.hir_stack = OrderedDict()
-        self.non_resident_stack = OrderedDict()
-        self.eviction_list = []
-        self.pg_hits = 0
-        self.pg_faults = 0
-        self.free_mem = mem
-        self.mem = mem
-        self.mRatio = 0
-        self.in_stack_miss = 0
-        self.out_stack_hit = 0
-        self.out_stack_miss = 0
+        self.Rmax = None
+        self.Rmax0 = None
 
-        self.lir_size = 0
+        self.page_fault = 0
+        self.page_hit = 0
 
-        self.result = result
-        self.info = info
-        self.train = False
+        self.last_ref_block = -1
 
-    def find_lru(self, s: OrderedDict, pg_table: deque):
-        temp_s = list(s)
-        # Always get first item of the temp_s
-        while self.pg_table[temp_s[0]].is_hir:
-            self.pg_table[temp_s[0]].in_stack = False
-            s.popitem(last=False)
-            del temp_s[0]
+    def remove_stack_Q(self, b_num):
+        if (not self.page_table[b_num].HIR_next and not self.page_table[b_num].HIR_prev):
+            self.Stack_Q_Tail, self.Stack_Q_Head = None, None
+        elif (self.page_table[b_num].HIR_next and self.page_table[b_num].HIR_prev):
+            self.page_table[b_num].HIR_prev.HIR_next = self.page_table[b_num].HIR_next
+            self.page_table[b_num].HIR_next.HIR_prev = self.page_table[b_num].HIR_prev
+            self.page_table[b_num].HIR_next, self.page_table[b_num].HIR_prev = None, None
+        elif (not self.page_table[b_num].HIR_prev):
+            self.Stack_Q_Head = self.page_table[b_num].HIR_next
+            self.Stack_Q_Head.HIR_prev.HIR_next = None
+            self.Stack_Q_Head.HIR_prev = None
+        elif (not self.page_table[b_num].HIR_next):
+            self.Stack_Q_Tail = self.page_table[b_num].HIR_prev
+            self.Stack_Q_Tail.HIR_next.HIR_prev = None
+            self.Stack_Q_Tail.HIR_next = None
+        else:
+            raise("Stack Q remove error \n")
+        return True
 
-    def get_range(self, trace) -> int:
-        max = 0
-        for x in trace:
-            if x > max:
-                max = x
-        return max
+    def add_stack_Q(self, b_num):
+        if (not self.Stack_Q_Head):
+            self.Stack_Q_Head = self.Stack_Q_Tail = self.page_table[b_num]
+        else:
+            self.page_table[b_num].HIR_next = self.Stack_Q_Head
+            self.Stack_Q_Head.HIR_prev = self.page_table[b_num]
+            self.Stack_Q_Head = self.page_table[b_num]
 
-    def print_information(self, mem, hits, faults, size):
-        print("Memory Size: ", mem)
-        print("Hits: ", hits)
-        print("Faults: ", faults)
-        print("Total: ", hits + faults)
-        print("Hit Ratio: ", hits / (hits + faults) * 100)
+    def remove_stack_S(self, b_num):
+        if (not self.page_table[b_num].LIRS_prev and not self.page_table[b_num].LIRS_next):
+            return False
 
-    def replace_lir_block(self, pg_table, lir_size):
-        temp_block = self.lir_stack.popitem(last=False)
-        self.pg_table[temp_block[1]].is_hir = True
-        self.pg_table[temp_block[1]].in_stack = False
-        self.hir_stack[temp_block[1]] = temp_block[1]
-        self.find_lru(self.lir_stack, pg_table)
-        self.lir_size -= 1
-        return self.lir_size
+        if (self.page_table[b_num] == self.Rmax):
+            self.Rmax = self.page_table[b_num].LIRS_prev
+            self.find_new_Rmax()
 
-    def LIRS_Replace_Algorithm(self):
-        # Creating variables
-        last_ref_block = -1
+        if (self.page_table[b_num] == self.Rmax0):
+            self.Rmax0 = self.page_table[b_num].LIRS_prev
 
-        model = SGDClassifier(loss="perceptron", eta0=1, learning_rate="constant", penalty=None)
+        if (self.page_table[b_num].LIRS_prev and self.page_table[b_num].LIRS_next):
+            self.page_table[b_num].LIRS_prev.LIRS_next = self.page_table[b_num].LIRS_next
+            self.page_table[b_num].LIRS_next.LIRS_prev = self.page_table[b_num].LIRS_prev
+            self.page_table[b_num].LIRS_prev, self.page_table[b_num].LIRS_next = None, None
+        elif (not self.page_table[b_num].LIRS_prev):
+            self.Stack_S_Head = self.page_table[b_num].LIRS_next
+            self.Stack_S_Head.LIRS_prev.LIRS_next = None
+            self.Stack_S_Head.LIRS_prev = None
+        elif (not self.page_table[b_num].LIRS_next):
+            self.Stack_S_Tail = self.page_table[b_num].LIRS_prev
+            self.Stack_S_Tail.LIRS_next.LIRS_prev = None
+            self.Stack_S_Tail.LIRS_next = None
+        else:
+            raise("Stack S remove error \n")
+        return True
 
-        for i in range(len(self.trace)):
-            ref_block = self.trace[i]
+    def add_stack_S(self, b_num):
+        if (not self.Stack_S_Head):
+            self.Stack_S_Head = self.Stack_S_Tail = self.page_table[b_num]
+            self.Rmax = self.page_table[b_num]
+        else:
+            self.page_table[b_num].LIRS_next = self.Stack_S_Head
+            self.Stack_S_Head.LIRS_prev = self.page_table[b_num]
+            self.Stack_S_Head = self.page_table[b_num]
+        return True
 
-            if ref_block == last_ref_block:
-                self.pg_hits += 1
-                continue
-            else:
-                pass
+    def find_new_Rmax(self):
+        if (not self.Rmax):
+            raise("Warning Rmax0 \n")
+        while (self.Rmax.is_hir == True):
+            self.Rmax.recency = False
+            self.Rmax = self.Rmax.LIRS_prev
 
-            # Is in stack miss ??
-            if not self.pg_table[ref_block].is_resident and self.pg_table[ref_block].in_stack:
-                self.in_stack_miss += 1
-            # Is out stack hit ??
-            if self.pg_table[ref_block].is_resident and not self.pg_table[ref_block].in_stack:
-                self.out_stack_hit += 1
-            if not self.pg_table[ref_block].is_resident and not self.pg_table[ref_block].in_stack:
-                self.out_stack_miss += 1
-
-            if not self.pg_table[ref_block].is_resident:
-                self.pg_faults += 1
-                if self.free_mem == 0:
-                    evicted_hir = self.hir_stack.popitem(last=False)
-                    self.pg_table[evicted_hir[1]].is_resident = False
-                    self.free_mem += 1
-                    self.train = True
-                elif self.free_mem > self.HIR_SIZE:
-                    self.pg_table[ref_block].is_hir = False
-                    self.lir_size += 1
-                self.free_mem -= 1
-            elif self.pg_table[ref_block].is_hir:
-                if self.hir_stack.get(ref_block):
-                    del self.hir_stack[ref_block]
-
-            if self.pg_table[ref_block].is_resident:
-                self.pg_hits += 1
-
-            if self.lir_stack.get(ref_block):
-                # use the real value and last reference features to update the model
-                # print(np.array([[self.pg_table[ref_block].reuse_distance]]), np.array([-1 if self.pg_table[ref_block].is_hir else 1]))
-                model.partial_fit(np.array([[self.pg_table[ref_block].reuse_distance]]), np.array([-1 if self.pg_table[ref_block].is_hir else 1], ), classes = np.array([1, -1]))
-
-                counter = 0
-                for j in self.lir_stack.keys():  # Getting the reuse distance
-                    counter += 1
-                    if self.lir_stack[j] == ref_block:
-                        break
-                self.pg_table[ref_block].reuse_distance = (len(self.lir_stack) - counter)  # Setting the reuse distance for that block
-
-
-                del self.lir_stack[ref_block]
-                self.find_lru(self.lir_stack, self.pg_table)
-
-            self.pg_table[ref_block].is_resident = True
-            self.lir_stack[ref_block] = self.pg_table[ref_block].b_num
-
-            if self.pg_table[ref_block].is_hir and self.pg_table[ref_block].in_stack:
-                self.pg_table[ref_block].is_hir = False
-                self.lir_size += 1
-
-                if self.lir_size > mem - self.HIR_SIZE:
-                    self.replace_lir_block(self.pg_table, self.lir_size)
-
-            elif self.pg_table[ref_block].is_hir:
-                self.hir_stack[ref_block] = self.pg_table[ref_block].b_num
-                self.pg_table[ref_block].last_status = -1
-            elif not self.pg_table[ref_block].is_hir:
-                self.pg_table[ref_block].last_status = 1
-
-                if not self.train: # Standard LIRS logic.
-                    self.hir_stack[ref_block] = self.pg_table[ref_block].b_num
-                else: # If trained, it now takes advantage of ML model.
-
-                    feature = np.array([[self.pg_table[ref_block].reuse_distance]])
-
-                    prediction = model.predict(feature.reshape(1, -1))
-                    # print(prediction)
-                    if prediction == 1:
-                        self.pg_table[ref_block].is_hir = False
-                        self.lir_size += 1
-                        if self.lir_size > mem - self.HIR_SIZE:
-                            self.replace_lir_block(self.pg_table, self.lir_size)
-                    else:
-                        self.hir_stack[ref_block] = self.pg_table[ref_block].b_num
-
-
-            self.pg_table[ref_block].in_stack = True
-            self.pg_table[ref_block].ref_times += 1
-            last_ref_block = ref_block
-
-        self.result.write(f"{str(self.mem)},{str(self.pg_faults / (self.pg_hits + self.pg_faults) * 100)},{str(self.pg_hits / (self.pg_hits + self.pg_faults) * 100)}\n")
-        self.print_information(mem, self.pg_hits, self.pg_faults, self.HIR_SIZE)
-        self.info.write(f"{str(self.mem)},{str(self.in_stack_miss/len(self.trace))},{str(self.out_stack_hit/len(self.trace))}\n")
-        print("in stack miss: ", self.in_stack_miss, "out stack hit: ", self.out_stack_hit, "out stack miss: ", self.out_stack_miss)
+    def find_new_Rmax0(self):
+        if (not self.Rmax0):
+            raise("Warning Rmax0 \n")
+        self.Rmax0.recency0 = False
+        self.Rmax0 = self.Rmax0.LIRS_prev
+        return self.Rmax0
     
-if __name__ == "__main__":
+    def print_information(self):
+        print ("memory size : ", self.MEMORY_SIZE)
+        print ("trace_size : ", self.trace_size)
+        print ("Q size : ", self.HIR_SIZE)
+        print ("page hit : ", self.page_hit)
+        print ("page fault : ", self.page_fault)
+        print ("Hit ratio: ", self.page_hit/(self.page_fault + self.page_hit))
+    
+    def print_stack(self, vtime):
+        if (5000 > vtime or vtime > 5003):
+            return 
+        ptr = self.Stack_S_Head
+        while (ptr):
+            # print("R" if ptr == self.Rmax else "", end="")
+            print("H" if ptr.is_hir else "L", end="")
+            print("R" if ptr.is_resident else "N", end="")
+            print(ptr.block_number, end="-")
+            ptr = ptr.LIRS_next
+        print ()
+
+
+    def LIRS(self, v_time, ref_block):
+        if (ref_block == self.last_ref_block):
+            self.page_hit += 1
+            return
+        self.last_ref_block = ref_block
+        if(not self.page_table[ref_block].is_resident):
+            self.page_fault += 1
+            # print (v_time, ref_block, 0)
+            # self.print_stack(v_time)
+
+            if (self.Free_Memory_Size == 0):
+                self.Stack_Q_Tail.is_resident = False
+                # self.page_table[self.Stack_Q_Tail.block_number].is_resident = False
+                self.remove_stack_Q(self.Stack_Q_Tail.block_number) # func(): remove block in the tail of stack Q
+                self.Free_Memory_Size += 1
+            elif (self.Free_Memory_Size > self.HIR_SIZE):
+                self.page_table[ref_block].is_hir = False
+            
+            self.Free_Memory_Size -= 1
+        elif (self.page_table[ref_block].is_hir):
+            self.remove_stack_Q(ref_block) # func(): 
+
+        if(self.page_table[ref_block].is_resident):
+            self.page_hit += 1
+            # print (v_time, ref_block, 1, "HIR" if self.page_table[ref_block].is_hir else "LIR")
+            # self.print_stack(v_time)
+        
+        # find new Rmax0
+        if (self.Rmax0 and not self.page_table[ref_block].recency0):
+            if (self.Rmax0 != self.page_table[ref_block]):
+                self.find_new_Rmax0()
+        
+        self.remove_stack_S(ref_block)
+        self.add_stack_S(ref_block)
+
+        if (self.Free_Memory_Size == 0 and not self.Rmax0):
+            self.Rmax0 = self.page_table[self.Rmax.block_number]
+        
+        self.page_table[ref_block].is_resident = True
+
+        if (self.page_table[ref_block].is_hir and self.page_table[ref_block].recency):
+            self.page_table[ref_block].is_hir = False
+
+            self.add_stack_Q(self.Rmax.block_number) # func():
+            self.Rmax.is_hir = True
+            self.Rmax.recency = False
+            self.find_new_Rmax()
+        elif (self.page_table[ref_block].is_hir):
+            self.add_stack_Q(ref_block) # func():
+
+        self.page_table[ref_block].recency = True
+        self.page_table[ref_block].recency0 = True
+
+        # self.print_stack()
+
+
+
+def main(tName): 
+    # get trace
+    trace_obj = Trace(tName)
+    # get the trace
+    trace, trace_dict, trace_size = trace_obj.get_trace()
+    memory_size = trace_obj.get_parameter()
+    memory_size = [100]
+    for memory in memory_size:
+        lirs_replace = LIRS_Replace_Algorithm(trace_obj.vm_size, trace_dict, memory, trace_size)
+        for v_time, ref_block in enumerate(trace):
+            lirs_replace.LIRS(v_time, ref_block)
+        lirs_replace.print_information()
+    
+
+
+    
+
+if __name__=="__main__": 
     if (len(sys.argv) != 2):
-        raise("Argument Error")
-
-    # Read the trace
+        raise("usage: python3 XXX.py trace_name")
     tName = sys.argv[1]
-    trace = []
-    with open('../trace/' + tName, "r") as f:
-        for line in f.readlines():
-            if not line == "*\n":
-                trace.append(int(line))
 
-    # Get the block range of the trace
-    vm_size = max(trace)
+    main(tName)
 
-    # define the name of the directory to be created
-    path = "../result_set/" + tName
-    try:
-        os.mkdir(path)
-    except OSError:
-        print ("Creation of the directory %s failed" % path)
-    else:
-        print ("Successfully created the directory %s " % path)
 
-    # Store the hit&miss ratio
-    result = open("../result_set/" + tName + "/ml_lirs_" + tName, "w")
 
-    # in stack miss, out stack hit
-    info = open("../result_set/" + tName + "/ml_lirs_info_" + tName, "w")
+node = Node(5)
 
-    # Get the trace parameter
-    MAX_MEMORY = []
-    with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
-        inputFile = inputFile.readlines()
-    for line in inputFile:
-        if not line == "*\n":
-            MAX_MEMORY.append(int(line))
+node1 = node
 
-    for mem in MAX_MEMORY:
-        lirs = LIRS(trace, mem, result, info)
-        lirs.LIRS_Replace_Algorithm()
-    result.close()
-    info.close()
-
-#     f = open("evictions.txt", "w")
-#     for i in range(len(eviction_list)):
-#         f.write(str(eviction_list[i]) + "\n")
-#     f.close()
+node.next = 1
+node.prev = 2
