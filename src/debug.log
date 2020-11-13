@@ -1,0 +1,188 @@
+======== Results ========
+memory size :  100
+trace_size :  52001
+Q size :  2
+page hit :  25
+page fault :  51976
+Hit ratio:  0.048075998538489643
+Out stack hit :  49551
+Predict Times = 47549 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  200
+trace_size :  52001
+Q size :  2.0
+page hit :  25
+page fault :  51976
+Hit ratio:  0.048075998538489643
+Out stack hit :  47051
+Predict Times = 45049 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  300
+trace_size :  52001
+Q size :  3.0
+page hit :  50
+page fault :  51951
+Hit ratio:  0.09615199707697929
+Out stack hit :  44576
+Predict Times = 42573 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  400
+trace_size :  52001
+Q size :  4.0
+page hit :  75
+page fault :  51926
+Hit ratio:  0.14422799561546892
+Out stack hit :  42101
+Predict Times = 40097 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  500
+trace_size :  52001
+Q size :  5.0
+page hit :  100
+page fault :  51901
+Hit ratio:  0.19230399415395857
+Out stack hit :  39626
+Predict Times = 37621 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  600
+trace_size :  52001
+Q size :  6.0
+page hit :  125
+page fault :  51876
+Hit ratio:  0.24037999269244822
+Out stack hit :  37151
+Predict Times = 35145 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  700
+trace_size :  52001
+Q size :  7.0
+page hit :  150
+page fault :  51851
+Hit ratio:  0.28845599123093785
+Out stack hit :  34676
+Predict Times = 32669 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  800
+trace_size :  52001
+Q size :  8.0
+page hit :  175
+page fault :  51826
+Hit ratio:  0.3365319897694275
+Out stack hit :  32201
+Predict Times = 30193 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  900
+trace_size :  52001
+Q size :  9.0
+page hit :  200
+page fault :  51801
+Hit ratio:  0.38460798830791715
+Out stack hit :  29726
+Predict Times = 27717 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  1000
+trace_size :  52001
+Q size :  10.0
+page hit :  225
+page fault :  51776
+Hit ratio:  0.4326839868464068
+Out stack hit :  27251
+Predict Times = 25241 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  1100
+trace_size :  52001
+Q size :  11.0
+page hit :  25486
+page fault :  26515
+Hit ratio:  49.010595950077885
+Out stack hit :  24776
+Predict Times = 22765 Predict 1 ratio = 95.05820338238524
+======== Results ========
+memory size :  1200
+trace_size :  52001
+Q size :  12.0
+page hit :  28178
+page fault :  23823
+Hit ratio:  54.187419472702445
+Out stack hit :  22301
+Predict Times = 20289 Predict 1 ratio = 94.9036423677855
+======== Results ========
+memory size :  1300
+trace_size :  52001
+Q size :  13.0
+page hit :  30860
+page fault :  21141
+Hit ratio:  59.34501259591162
+Out stack hit :  19826
+Predict Times = 17813 Predict 1 ratio = 94.64997473755122
+======== Results ========
+memory size :  1400
+trace_size :  52001
+Q size :  14.0
+page hit :  33555
+page fault :  18446
+Hit ratio:  64.52760523836079
+Out stack hit :  17351
+Predict Times = 15337 Predict 1 ratio = 94.39916541696552
+======== Results ========
+memory size :  1500
+trace_size :  52001
+Q size :  15.0
+page hit :  36252
+page fault :  15749
+Hit ratio:  69.71404396069306
+Out stack hit :  14876
+Predict Times = 12861 Predict 1 ratio = 94.06733535494907
+======== Results ========
+memory size :  1600
+trace_size :  52001
+Q size :  16.0
+page hit :  38964
+page fault :  13037
+Hit ratio:  74.92932828214842
+Out stack hit :  12401
+Predict Times = 10385 Predict 1 ratio = 93.72171401059221
+======== Results ========
+memory size :  1700
+trace_size :  52001
+Q size :  17.0
+page hit :  41684
+page fault :  10317
+Hit ratio:  80.15999692313609
+Out stack hit :  9926
+Predict Times = 7909 Predict 1 ratio = 93.26084207864457
+======== Results ========
+memory size :  1800
+trace_size :  52001
+Q size :  18.0
+page hit :  44457
+page fault :  7544
+Hit ratio:  85.49258668102536
+Out stack hit :  7451
+Predict Times = 5433 Predict 1 ratio = 93.35542057794956
+======== Results ========
+memory size :  1900
+trace_size :  52001
+Q size :  19.0
+page hit :  47276
+page fault :  4725
+Hit ratio:  90.91363627622546
+Out stack hit :  4976
+Predict Times = 2957 Predict 1 ratio = 95.7727426445722
+======== Results ========
+memory size :  2000
+trace_size :  52001
+Q size :  20.0
+page hit :  49975
+page fault :  2026
+Hit ratio:  96.1039210784408
+Out stack hit :  2501
+Predict Times = 481 Predict 1 ratio = 0.0
+======== Results ========
+memory size :  2100
+trace_size :  52001
+Q size :  21.0
+page hit :  50000
+page fault :  2001
+Hit ratio:  96.15199707697928
+Out stack hit :  2001

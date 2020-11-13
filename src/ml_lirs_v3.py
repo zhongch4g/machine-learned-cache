@@ -14,7 +14,9 @@ class Node:
         self.HIR_next = None
         self.recency = False # Rmax boundary
         self.recency0 = False # LRU boundary
-        self.reuse_distance = sys.maxsize
+        self.refer_times = 0
+        self.reuse_distance = 0
+        self.position = 2
 
 class Trace:
     def __init__(self, tName):
@@ -26,7 +28,7 @@ class Trace:
         self.trace_dict = dict()
 
     def get_trace(self):
-        print ("get trace from ", self.trace_path)
+        # print ("get trace from ", self.trace_path)
         with open(self.trace_path, "r") as f:
             for line in f.readlines():
                 if not line == "*\n" and not line.strip() == "":
@@ -37,15 +39,30 @@ class Trace:
         return self.trace, self.trace_dict, len(self.trace)
 
     def get_parameter(self):
-        print ("get trace from ", self.parameter_path)
+        # print ("get trace from ", self.parameter_path)
         with open(self.parameter_path, "r") as f:
             for line in f.readlines():
                 if not line == "*\n":
-                    self.memory_size.append(int(line))
+                    self.memory_size.append(int(line.strip()))
         return self.memory_size
+
+class WriteToFile:
+    def __init__(self, tName):
+        self.tName = tName
+        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_" + self.tName, "w")
+    
+    def write_to_file(self, *args):
+        data = ",".join(args)
+        # Store the hit&miss ratio
+        self.FILE.write(data + "\n")
+
 
 class LIRS_Replace_Algorithm:
     def __init__(self, vm_size, trace_dict, mem_size, trace_size, model):
+        # re-initialize trace_dict
+        for k, v in trace_dict.items():
+            trace_dict[k] = Node(k)
+
         self.model = model
         self.trace_size = trace_size
         self.page_table = trace_dict # {block number : Node}
@@ -72,6 +89,15 @@ class LIRS_Replace_Algorithm:
 
         self.count_exampler = 0
         self.train = False
+
+        self.predict_times = 0
+        self.predict_as_1 = 0
+        self.out_stack_hit = 0
+
+        self.mini_batch_X = np.array([])
+        self.mini_batch_X = np.array([])
+
+        self.position_importance = {0:1, 1:2, 2:3}
 
     def remove_stack_Q(self, b_num):
         if (not self.page_table[b_num].HIR_next and not self.page_table[b_num].HIR_prev):
@@ -163,12 +189,17 @@ class LIRS_Replace_Algorithm:
 
     
     def print_information(self):
+        print ("======== Results ========")
         print ("memory size : ", self.MEMORY_SIZE)
         print ("trace_size : ", self.trace_size)
         print ("Q size : ", self.HIR_SIZE)
         print ("page hit : ", self.page_hit)
         print ("page fault : ", self.page_fault)
-        print ("Hit ratio: ", self.page_hit/(self.page_fault + self.page_hit))
+        print ("Hit ratio: ", self.page_hit/(self.page_fault + self.page_hit) * 100)
+        print ("Out stack hit : ", self.out_stack_hit)
+        if (self.predict_times > 0):
+            print ("Predict Times =", self.predict_times, "Predict 1 ratio =", self.predict_as_1/self.predict_times * 100)
+        return self.MEMORY_SIZE, self.page_fault/(self.page_fault + self.page_hit) * 100, self.page_hit/(self.page_fault + self.page_hit) * 100
     
     def print_stack(self, v_time):
         if (v_time < 50000):
@@ -183,10 +214,16 @@ class LIRS_Replace_Algorithm:
         print ()
 
     def LIRS(self, v_time, ref_block):
+        # print (v_time, ref_block, self.page_table[ref_block].recency, self.page_table[ref_block].reuse_distance)
+        if not self.page_table[ref_block].recency:
+            self.out_stack_hit += 1
+            # print("out stack hit", v_time, ref_block)
+
         if (ref_block == self.last_ref_block):
             self.page_hit += 1
             return
         self.last_ref_block = ref_block
+        self.page_table[ref_block].refer_times += 1
         if(not self.page_table[ref_block].is_resident):
             self.page_fault += 1
             # print (v_time, ref_block, 0)
@@ -214,21 +251,37 @@ class LIRS_Replace_Algorithm:
             if (self.Rmax0 != self.page_table[ref_block]):
                 self.find_new_Rmax0()
 
-        # type feature
-        if (self.page_table[ref_block].recency0):
-            p_type = 0
-        elif (self.page_table[ref_block].recency):
-            p_type = 1
-        else:
-            p_type = 2
-
-        if (self.page_table[ref_block].recency):
+        if (self.page_table[ref_block].refer_times > 1):
             self.count_exampler += 1
-            self.model.partial_fit(np.array([[self.page_table[ref_block].reuse_distance, p_type]]), np.array([1 if self.page_table[ref_block].recency else -1], ), classes = np.array([1, -1]))
-            self.page_table[ref_block].reuse_distance = self.get_reuse_distance(ref_block)  # Setting the reuse distance for that block
+            p_feature = self.position_importance[self.page_table[ref_block].position]
+            
+            # print (v_time, "train = ", np.array([[self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]), np.array([1 if self.page_table[ref_block].recency else -1]))
+            # self.model.partial_fit(np.array([[self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]), np.array([1 if self.page_table[ref_block].recency else -1], ), classes = np.array([1, -1]))
+            if (self.mini_batch_X.all()):
+                self.mini_batch_X = np.array([[p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]])
+                self.mini_batch_Y = np.array([1 if self.page_table[ref_block].recency else -1])
+            else:
+                # print(self.mini_batch_X)
+                self.mini_batch_X = np.r_[self.mini_batch_X, [[p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]]
+                self.mini_batch_Y = np.r_[self.mini_batch_Y, [1 if self.page_table[ref_block].recency else -1]]
+            if (len(self.mini_batch_X) == 1000):
+                self.model.partial_fit(self.mini_batch_X, self.mini_batch_Y, classes = np.array([1, -1]))
+                self.mini_batch_X = np.array([])
+                self.mini_batch_Y = np.array([])
+            
+            # type feature
+            p_type = -1
+            if (self.page_table[ref_block].recency0):
+                p_type = 0
+            elif (self.page_table[ref_block].recency):
+                p_type = 1
+            else:
+                p_type = 2
+            self.page_table[ref_block].position = p_type
+            # self.page_table[ref_block].reuse_distance = self.get_reuse_distance(ref_block)  # Setting the reuse distance for that block
         
         # when use the data to predict the model
-        if (self.count_exampler == self.MEMORY_SIZE // 5):
+        if (self.count_exampler == 5000):
             self.train = True
 
         self.remove_stack_S(ref_block)
@@ -250,17 +303,22 @@ class LIRS_Replace_Algorithm:
             if (not self.train):
                 self.add_stack_Q(ref_block) # func():
             else:
-                feature = np.array([[self.page_table[ref_block].reuse_distance], [p_type]])
+                p_feature = self.position_importance[self.page_table[ref_block].position]
+
+                # feature = np.array([[self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)], ])
+                feature = np.array([[p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)], ])
+                # print ([self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)])
                 prediction = self.model.predict(feature.reshape(1, -1))
-                # if (prediction == -1):
-                #     raise("prediction 0")
+                self.predict_times += 1
                 if prediction == 1:
+                    self.predict_as_1 += 1
                     self.page_table[ref_block].is_hir = False
                     self.add_stack_Q(self.Rmax.block_number) # func():
                     self.Rmax.is_hir = True
                     self.Rmax.recency = False
                     self.find_new_Rmax()
                 else:
+                    # print ("Predict HIR")
                     self.add_stack_Q(ref_block) # func():
 
         self.page_table[ref_block].recency = True
@@ -271,28 +329,28 @@ class LIRS_Replace_Algorithm:
 
 
 def main(tName): 
+    # result file
+    FILE = WriteToFile(tName)
     # get trace
     trace_obj = Trace(tName)
     # get the trace
     trace, trace_dict, trace_size = trace_obj.get_trace()
     memory_size = trace_obj.get_parameter()
-    memory_size = [1000]
+    # memory_size = [1000]
     for memory in memory_size:
         model = SGDClassifier(loss="perceptron", eta0=1, learning_rate="constant", penalty=None)
         lirs_replace = LIRS_Replace_Algorithm(trace_obj.vm_size, trace_dict, memory, trace_size, model)
         for v_time, ref_block in enumerate(trace):
             lirs_replace.LIRS(v_time, ref_block)
-        lirs_replace.print_information()
-    
 
-
+        memory_size, miss_ratio, hit_ratio = lirs_replace.print_information()
+        FILE.write_to_file(str(memory_size), str(miss_ratio), str(hit_ratio))
     
 
 if __name__=="__main__": 
     if (len(sys.argv) != 2):
         raise("usage: python3 XXX.py trace_name")
     tName = sys.argv[1]
-
     main(tName)
 
 

@@ -12,7 +12,7 @@ class Block:
         self.is_resident = is_resident
         self.is_hir = is_hir_block
         self.in_stack = in_stack
-        self.reuse_distance = -sys.maxsize
+        self.reuse_distance = sys.maxsize
         self.ref_times = 0
         self.last_status = None # LIR HIR
 
