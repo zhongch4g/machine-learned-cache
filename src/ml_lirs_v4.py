@@ -79,6 +79,7 @@ class LIRS_Replace_Algorithm:
         self.Stack_Q_Head = None
         self.Stack_Q_Tail = None
 
+        self.lir_size = 0
         self.Rmax = None
         self.Rmax0 = None
 
@@ -91,7 +92,8 @@ class LIRS_Replace_Algorithm:
         self.train = False
 
         self.predict_times = 0
-        self.predict_as_1 = 0
+        self.predict_H_L = 0
+        self.predict_L_H = 0
         self.out_stack_hit = 0
 
         self.mini_batch_X = np.array([])
@@ -99,7 +101,7 @@ class LIRS_Replace_Algorithm:
 
         self.position_importance = {0:1, 1:2, 2:3}
 
-        self.start_use_model = 5000
+        self.start_use_model = 3000
 
     def remove_stack_Q(self, b_num):
         if (not self.page_table[b_num].HIR_next and not self.page_table[b_num].HIR_prev):
@@ -189,6 +191,13 @@ class LIRS_Replace_Algorithm:
             ptr = ptr.LIRS_next
         raise("get reuse distance error!")
 
+    def resident_number(self):
+        count = 0
+        for b_num, node in self.page_table.items():
+            if (node.is_resident):
+                count += 1
+        print (self.MEMORY_SIZE, count)
+
     
     def print_information(self):
         print ("======== Results ========")
@@ -199,8 +208,7 @@ class LIRS_Replace_Algorithm:
         print ("page fault : ", self.page_fault)
         print ("Hit ratio: ", self.page_hit/(self.page_fault + self.page_hit) * 100)
         print ("Out stack hit : ", self.out_stack_hit)
-        if (self.predict_times > 0):
-            print ("Predict Times =", self.predict_times, "Predict 1 ratio =", self.predict_as_1/self.predict_times * 100)
+        print ("Predict Times =", self.predict_times, "H->L", self.predict_H_L, "L->H", self.predict_L_H)
         return self.MEMORY_SIZE, self.page_fault/(self.page_fault + self.page_hit) * 100, self.page_hit/(self.page_fault + self.page_hit) * 100
     
     def print_stack(self, v_time):
@@ -238,6 +246,7 @@ class LIRS_Replace_Algorithm:
                 self.Free_Memory_Size += 1
             elif (self.Free_Memory_Size > self.HIR_SIZE):
                 self.page_table[ref_block].is_hir = False
+                self.lir_size += 1
             
             self.Free_Memory_Size -= 1
         elif (self.page_table[ref_block].is_hir):
@@ -245,8 +254,6 @@ class LIRS_Replace_Algorithm:
 
         if(self.page_table[ref_block].is_resident):
             self.page_hit += 1
-            # print (v_time, ref_block, 1, "HIR" if self.page_table[ref_block].is_hir else "LIR")
-            # self.print_stack(v_time)
         
         # find new Rmax0
         if (self.Rmax0 and not self.page_table[ref_block].recency0):
@@ -255,9 +262,8 @@ class LIRS_Replace_Algorithm:
 
         if (self.page_table[ref_block].refer_times > 1):
             self.count_exampler += 1
-            p_feature = self.position_importance[self.page_table[ref_block].position]
+            # p_feature = self.position_importance[self.page_table[ref_block].position]
             
-            # print (v_time, "train = ", np.array([[self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]), np.array([1 if self.page_table[ref_block].recency else -1]))
             # self.model.partial_fit(np.array([[self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]), np.array([1 if self.page_table[ref_block].recency else -1], ), classes = np.array([1, -1]))
             if (self.mini_batch_X.all()):
                 self.mini_batch_X = np.array([[1 if i == self.page_table[ref_block].position else 0 for i in range(3)]])
@@ -295,38 +301,62 @@ class LIRS_Replace_Algorithm:
         
         self.page_table[ref_block].is_resident = True
 
-        if (self.page_table[ref_block].is_hir and self.page_table[ref_block].recency):
-            self.page_table[ref_block].is_hir = False
+        # start predict
+        if (self.train):
 
-            self.add_stack_Q(self.Rmax.block_number) # func():
-            self.Rmax.is_hir = True
-            self.Rmax.recency = False
-            self.find_new_Rmax()
-        elif (self.page_table[ref_block].is_hir):
-            if (not self.train):
-                self.add_stack_Q(ref_block) # func():
-            else:
-                p_feature = self.position_importance[self.page_table[ref_block].position]
-
-                # feature = np.array([[self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)], ])
-                feature = np.array([[p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)], ])
-                feature = np.array([[1 if i == self.page_table[ref_block].position else 0 for i in range(3)], ])
-                # print ([self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)])
-                prediction = self.model.predict(feature.reshape(1, -1))
-                self.predict_times += 1
-                if prediction == 1:
-                    self.predict_as_1 += 1
+            feature = np.array([[1 if i == self.page_table[ref_block].position else 0 for i in range(3)], ])
+            prediction = self.model.predict(feature.reshape(1, -1))
+            self.predict_times += 1
+            if (self.page_table[ref_block].is_hir):
+                if (prediction == 1):
+                    # H -> L
+                    # self.lir_size += 1
+                    self.predict_H_L += 1
                     self.page_table[ref_block].is_hir = False
                     self.add_stack_Q(self.Rmax.block_number) # func():
                     self.Rmax.is_hir = True
                     self.Rmax.recency = False
                     self.find_new_Rmax()
-                else:
-                    # print ("Predict HIR")
+                elif (prediction == -1):
+                    # H -> H
                     self.add_stack_Q(ref_block) # func():
+            else:
+                # if prev LIR
+                if (prediction == -1 and self.lir_size > self.HIR_SIZE):
+                    # L -> H
+                    self.predict_L_H += 1
+                    self.lir_size -= 1
+                    # print (v_time, ref_block, self.lir_size, "L -> H")
+                    self.add_stack_Q(ref_block) # func():
+                    if (ref_block == self.Rmax.block_number):
+                        self.Rmax.is_hir = True
+                        self.Rmax.recency = False
+                        self.find_new_Rmax()
+                    else:
+                        self.page_table[ref_block].is_hir = True
+
+                elif (prediction == 1):
+                    # L -> L do nothing
+                    pass
+        else:
+            # origin lirs
+            if (self.page_table[ref_block].is_hir and self.page_table[ref_block].recency):
+                self.page_table[ref_block].is_hir = False
+                self.lir_size += 1
+
+                self.add_stack_Q(self.Rmax.block_number) # func():
+                self.Rmax.is_hir = True
+                self.lir_size -= 1
+                self.Rmax.recency = False
+                self.find_new_Rmax()
+            elif (self.page_table[ref_block].is_hir):
+                self.add_stack_Q(ref_block) # func():
 
         self.page_table[ref_block].recency = True
         self.page_table[ref_block].recency0 = True
+        # if (v_time % 100 == 1):
+            # print ("lir_size : ", self.lir_size)
+            # self.resident_number()
 
         # self.print_stack(v_time)
 
