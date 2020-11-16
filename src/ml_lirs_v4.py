@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 from sklearn.linear_model import SGDClassifier
+from sklearn.naive_bayes import BernoulliNB
 
 class Node:
     def __init__(self, b_num):
@@ -16,7 +17,7 @@ class Node:
         self.recency0 = False # LRU boundary
         self.refer_times = 0
         self.reuse_distance = 0
-        self.position = 2
+        self.position = [0, 0, 1]
 
 class Trace:
     def __init__(self, tName):
@@ -58,7 +59,8 @@ class WriteToFile:
 
 
 class LIRS_Replace_Algorithm:
-    def __init__(self, vm_size, trace_dict, mem_size, trace_size, model):
+    def __init__(self, t_name, vm_size, trace_dict, mem_size, trace_size, model, start_use_model=3000, mini_batch=1000):
+        self.trace_name = t_name
         # re-initialize trace_dict
         for k, v in trace_dict.items():
             trace_dict[k] = Node(k)
@@ -101,7 +103,8 @@ class LIRS_Replace_Algorithm:
 
         self.position_importance = {0:1, 1:2, 2:3}
 
-        self.start_use_model = 3000
+        self.start_use_model = start_use_model
+        self.mini_batch = mini_batch
 
     def remove_stack_Q(self, b_num):
         if (not self.page_table[b_num].HIR_next and not self.page_table[b_num].HIR_prev):
@@ -198,9 +201,13 @@ class LIRS_Replace_Algorithm:
                 count += 1
         print (self.MEMORY_SIZE, count)
 
+    def generate_features(self, *feature):
+        pass
+
     
     def print_information(self):
         print ("======== Results ========")
+        print ("trace : ", self.trace_name)
         print ("memory size : ", self.MEMORY_SIZE)
         print ("trace_size : ", self.trace_size)
         print ("Q size : ", self.HIR_SIZE)
@@ -260,18 +267,18 @@ class LIRS_Replace_Algorithm:
             if (self.Rmax0 != self.page_table[ref_block]):
                 self.find_new_Rmax0()
 
-        if (self.page_table[ref_block].refer_times > 1):
+        if (self.page_table[ref_block].refer_times > 0):
             self.count_exampler += 1
             # p_feature = self.position_importance[self.page_table[ref_block].position]
             
             # self.model.partial_fit(np.array([[self.page_table[ref_block].reuse_distance, p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]), np.array([1 if self.page_table[ref_block].recency else -1], ), classes = np.array([1, -1]))
             if (self.mini_batch_X.all()):
-                self.mini_batch_X = np.array([[1 if i == self.page_table[ref_block].position else 0 for i in range(3)]])
+                self.mini_batch_X = np.array([self.page_table[ref_block].position + [self.page_table[ref_block].refer_times]])
                 self.mini_batch_Y = np.array([1 if self.page_table[ref_block].recency else -1])
             else:
                 # print(self.mini_batch_X)
                 # self.mini_batch_X = np.r_[self.mini_batch_X, [[p_feature] + [1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]]
-                self.mini_batch_X = np.r_[self.mini_batch_X, [[1 if i == self.page_table[ref_block].position else 0 for i in range(3)]]]
+                self.mini_batch_X = np.r_[self.mini_batch_X, [self.page_table[ref_block].position + [self.page_table[ref_block].refer_times]]]
                 self.mini_batch_Y = np.r_[self.mini_batch_Y, [1 if self.page_table[ref_block].recency else -1]]
             if (len(self.mini_batch_X) == 1000):
                 self.model.partial_fit(self.mini_batch_X, self.mini_batch_Y, classes = np.array([1, -1]))
@@ -279,14 +286,14 @@ class LIRS_Replace_Algorithm:
                 self.mini_batch_Y = np.array([])
             
             # type feature
-            p_type = -1
+            position = [0, 0, 0]
             if (self.page_table[ref_block].recency0):
-                p_type = 0
-            elif (self.page_table[ref_block].recency):
-                p_type = 1
-            else:
-                p_type = 2
-            self.page_table[ref_block].position = p_type
+                position[0] = 1
+            if (self.page_table[ref_block].recency):
+                position[1] = 1
+            if (not self.page_table[ref_block].recency):
+                position[2] = 1
+            self.page_table[ref_block].position = position
             # self.page_table[ref_block].reuse_distance = self.get_reuse_distance(ref_block)  # Setting the reuse distance for that block
         
         # when use the data to predict the model
@@ -304,7 +311,7 @@ class LIRS_Replace_Algorithm:
         # start predict
         if (self.train):
 
-            feature = np.array([[1 if i == self.page_table[ref_block].position else 0 for i in range(3)], ])
+            feature = np.array([self.page_table[ref_block].position + [self.page_table[ref_block].refer_times]])
             prediction = self.model.predict(feature.reshape(1, -1))
             self.predict_times += 1
             if (self.page_table[ref_block].is_hir):
@@ -354,6 +361,7 @@ class LIRS_Replace_Algorithm:
 
         self.page_table[ref_block].recency = True
         self.page_table[ref_block].recency0 = True
+        self.page_table[ref_block].refer_times += 1
         # if (v_time % 100 == 1):
             # print ("lir_size : ", self.lir_size)
             # self.resident_number()
@@ -362,18 +370,19 @@ class LIRS_Replace_Algorithm:
 
 
 
-def main(tName): 
+def main(t_name, start_predict, mini_batch): 
     # result file
-    FILE = WriteToFile(tName)
+    FILE = WriteToFile(t_name)
     # get trace
-    trace_obj = Trace(tName)
+    trace_obj = Trace(t_name)
     # get the trace
     trace, trace_dict, trace_size = trace_obj.get_trace()
     memory_size = trace_obj.get_parameter()
     # memory_size = [1000]
     for memory in memory_size:
-        model = SGDClassifier(loss="perceptron", eta0=1, learning_rate="constant", penalty=None)
-        lirs_replace = LIRS_Replace_Algorithm(trace_obj.vm_size, trace_dict, memory, trace_size, model)
+        # model = SGDClassifier(loss="log", eta0=1, learning_rate="adaptive", penalty="l2")
+        model = BernoulliNB()
+        lirs_replace = LIRS_Replace_Algorithm(t_name, trace_obj.vm_size, trace_dict, memory, trace_size, model, start_predict, mini_batch)
         for v_time, ref_block in enumerate(trace):
             lirs_replace.LIRS(v_time, ref_block)
 
@@ -382,10 +391,12 @@ def main(tName):
     
 
 if __name__=="__main__": 
-    if (len(sys.argv) != 2):
-        raise("usage: python3 XXX.py trace_name")
-    tName = sys.argv[1]
-    main(tName)
+    if (len(sys.argv) != 4):
+        raise("usage: python3 XXX.py trace_name start_predict mini_batch")
+    t_name = sys.argv[1]
+    start_predict = int(sys.argv[2])
+    mini_batch = int(sys.argv[3])
+    main(t_name, start_predict, mini_batch)
 
 
 

@@ -56,7 +56,7 @@ if __name__ == "__main__":
     miss_rate_set = []
     miss_rate_set.append(get_result("../result_set/" + tName + "/lirs_" + tName))
     miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_" + tName))
-    miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-OPT"))
+    # miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-OPT"))
 
     # Get the trace parameter
     MAX_MEMORY = []
