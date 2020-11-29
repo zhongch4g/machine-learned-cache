@@ -6,8 +6,8 @@ import sys
 WORK_SPACE = './myLirs/'
 
 markers = ['X', 'o', 'v', '.', '+', '1']
-algo = ['LIRS', 'ML-LIRS', 'OPT']
-colors = ['c', 'm', 'b']
+algo = ['LRU', 'LIRS', 'ML-LIRS', 'OPT']
+colors = ['r', 'c', 'm', 'b']
 
 def plot(X, Y, tName, args):
     for i, y in enumerate(Y):
@@ -54,13 +54,15 @@ if __name__ == "__main__":
     args = sys.argv[2]
 
     miss_rate_set = []
+    miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-LRU"))
     miss_rate_set.append(get_result("../result_set/" + tName + "/lirs_" + tName))
     miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_" + tName))
-    # miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-OPT"))
+    miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-OPT"))
 
     # Get the trace parameter
     MAX_MEMORY = []
     with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
+    # with codecs.open("/home/zhongchen/myLirs/trace_parameter/" + tName, "r", "UTF8") as inputFile:
         inputFile = inputFile.readlines()
     for line in inputFile:
         if not line == "*\n":

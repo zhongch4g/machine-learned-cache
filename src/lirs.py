@@ -14,8 +14,15 @@ class Block:
 HIR_PERCENTAGE = 1.0
 MIN_HIR_MEMORY = 2
 
+class Segment_Miss:
+    def __init__(self, tName):
+        self.tName = tName
+        self.FILE = open("../result_set/" + self.tName + "/lirs_" + self.tName + "_segment_miss", "w")
+    def record(self, segment_miss_ratio):
+        self.FILE.write(str(segment_miss_ratio) + "\n")
+
 class LIRS:
-    def __init__(self, trace, mem, result, info):
+    def __init__(self, tName, trace, mem, result, info):
         self.trace = trace
         # Init the queue
         self.pg_table = deque()
@@ -46,6 +53,11 @@ class LIRS:
 
         self.result = result
         self.info = info
+
+        # segment miss
+        self.epoch = len(self.trace) // 100
+        self.last_miss = 0
+        self.seg_file = Segment_Miss(tName)
 
     def find_lru(self, s: OrderedDict, pg_table: deque):
         temp_s = list(s)
@@ -83,6 +95,12 @@ class LIRS:
         last_ref_block = -1
 
         for i in range(len(self.trace)):
+            if (i > 0 and i % self.epoch == 0):
+                segment_miss = self.pg_faults - self.last_miss
+
+                self.seg_file.record(segment_miss/self.epoch * 100)
+                self.last_miss = self.pg_faults
+
             ref_block = self.trace[i]
 
             if ref_block == last_ref_block:
@@ -181,8 +199,9 @@ if __name__ == "__main__":
     for line in inputFile:
         if not line == "*\n":
             MAX_MEMORY.append(int(line))
+    # MAX_MEMORY = [200]
     for mem in MAX_MEMORY:
-        lirs = LIRS(trace, mem, result, info)
+        lirs = LIRS(tName, trace, mem, result, info)
         lirs.LIRS_Replace_Algorithm()
     result.close()
     info.close()

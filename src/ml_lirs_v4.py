@@ -57,6 +57,12 @@ class WriteToFile:
         # Store the hit&miss ratio
         self.FILE.write(data + "\n")
 
+class Segment_Miss:
+    def __init__(self, tName):
+        self.tName = tName
+        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_" + self.tName + "_segment_miss", "w")
+    def record(self, segment_miss_ratio):
+        self.FILE.write(str(segment_miss_ratio) + "\n")
 
 class LIRS_Replace_Algorithm:
     def __init__(self, t_name, vm_size, trace_dict, mem_size, trace_size, model, start_use_model=3000, mini_batch=1000):
@@ -105,6 +111,11 @@ class LIRS_Replace_Algorithm:
 
         self.start_use_model = start_use_model
         self.mini_batch = mini_batch
+
+        # segment miss
+        self.epoch = self.trace_size // 100
+        self.last_miss = 0
+        self.seg_file = Segment_Miss(t_name)
 
     def remove_stack_Q(self, b_num):
         if (not self.page_table[b_num].HIR_next and not self.page_table[b_num].HIR_prev):
@@ -231,6 +242,13 @@ class LIRS_Replace_Algorithm:
         print ()
 
     def LIRS(self, v_time, ref_block):
+        if (v_time % self.epoch == 0):
+            segment_miss = self.page_fault - self.last_miss
+
+            self.seg_file.record(segment_miss/self.epoch * 100)
+            self.last_miss = self.page_fault
+
+
         # print (v_time, ref_block, self.page_table[ref_block].recency, self.page_table[ref_block].reuse_distance)
         if not self.page_table[ref_block].recency:
             self.out_stack_hit += 1
@@ -398,11 +416,3 @@ if __name__=="__main__":
     mini_batch = int(sys.argv[3])
     main(t_name, start_predict, mini_batch)
 
-
-
-node = Node(5)
-
-node1 = node
-
-node.next = 1
-node.prev = 2
