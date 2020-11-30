@@ -21,7 +21,7 @@ def plot(X, Y, tName, args):
     Set y axis begin at 0
     """
     plt.ylim(bottom=0)
-    plt.savefig("../graph/miss_ratio/" + tName + args)
+    plt.savefig("../graph/miss_ratio/v6/" + tName + args)
     plt.close()
         
 def get_result(path):

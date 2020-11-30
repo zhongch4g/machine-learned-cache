@@ -49,7 +49,7 @@ if __name__ == "__main__":
     seg_miss_rate_set = []
     seg_miss_rate_set.append(get_result("../result_set/" + tName + "/lirs_" + tName + "_segment_miss"))
     seg_miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_" + tName + "_segment_miss"))
-    # seg_miss_rate_set.append(get_result("../result_set/" + tName + "/opt_" + tName + "_segment_miss"))
+    seg_miss_rate_set.append(get_result("../result_set/" + tName + "/opt_" + tName + "_segment_miss"))
     seg_size = [i for i in range(len(seg_miss_rate_set[0]))]
     plot(seg_size, seg_miss_rate_set, tName, args)
 
