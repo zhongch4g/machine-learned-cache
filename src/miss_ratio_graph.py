@@ -61,8 +61,8 @@ if __name__ == "__main__":
 
     # Get the trace parameter
     MAX_MEMORY = []
-    with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
-    # with codecs.open("/home/zhongchen/myLirs/trace_parameter/" + tName, "r", "UTF8") as inputFile:
+    # with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
+    with codecs.open("/home/zhongchen/myLirs/trace_parameter/" + tName, "r", "UTF8") as inputFile:
         inputFile = inputFile.readlines()
     for line in inputFile:
         if not line == "*\n":

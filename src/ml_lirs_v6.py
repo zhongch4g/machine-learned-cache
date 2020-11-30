@@ -1,3 +1,13 @@
+"""
+training data collection
+1. re-access
+2. demote from Rmax
+
+add feature
+hit/miss
+
+"""
+
 import sys
 import os
 import numpy as np
@@ -64,7 +74,7 @@ class WriteToFile:
             os.mkdir("../result_set/" + self.tName + "/")  
         except OSError as error:  
             print(error)
-        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_" + self.tName, "w")
+        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_v6_" + self.tName, "w")
 
     
     def write_to_file(self, *args):
@@ -305,7 +315,7 @@ class LIRS_Replace_Algorithm:
             self.seg_file.record(segment_miss/self.epoch * 100)
             self.last_miss = self.page_fault
             # print(self.lir_size)
-            # print(self.train)
+            print(self.train)
 
         if not self.page_table[ref_block].recency:
             self.out_stack_hit += 1
@@ -430,15 +440,18 @@ class LIRS_Replace_Algorithm:
 
 
 
-def main(t_name, start_predict, mini_batch): 
+def main(t_name, start_predict, mini_batch, cache=None): 
     # result file
     FILE = WriteToFile(t_name)
     # get trace(lirs_trace/lirs2_trace)
     trace_obj = Trace(t_name, "lirs_trace")
     # get the trace
     trace, trace_dict, trace_size = trace_obj.get_trace()
-    memory_size = trace_obj.get_parameter()
-    # memory_size = [200]
+    memory_size = None
+    if (not cache):
+        memory_size = trace_obj.get_parameter()
+    else:
+        memory_size = [cache]
     # print(memory_size)
     for memory in memory_size:
         # model = SGDClassifier(loss="log", eta0=1, learning_rate="adaptive", penalty="l2")
@@ -452,10 +465,13 @@ def main(t_name, start_predict, mini_batch):
     
 
 if __name__=="__main__": 
-    if (len(sys.argv) != 4):
-        raise("usage: python3 XXX.py trace_name start_predict mini_batch")
+    # if (len(sys.argv) != 4):
+    #     raise("usage: python3 XXX.py trace_name start_predict mini_batch")
     t_name = sys.argv[1]
     start_predict = int(sys.argv[2])
     mini_batch = int(sys.argv[3])
-    main(t_name, start_predict, mini_batch)
+    cache = None
+    if (len(sys.argv) == 5):
+        cache = int(sys.argv[4])
+    main(t_name, start_predict, mini_batch, cache)
 

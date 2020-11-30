@@ -15,8 +15,8 @@ def plot(X, Y, tName, args):
         y = [float(_) for _ in y]
         plt.plot(X, y, color=colors[i], marker=markers[i], label = algo[i], alpha=0.6)
     plt.title(tName)
-    plt.xlabel('Cache Size')
-    plt.ylabel('Epoch')
+    plt.xlabel('Epoch')
+    plt.ylabel('Miss Ratio (%)')
     plt.legend()
     """
     Set y axis begin at 0
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     seg_miss_rate_set = []
     seg_miss_rate_set.append(get_result("../result_set/" + tName + "/lirs_" + tName + "_segment_miss"))
     seg_miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_" + tName + "_segment_miss"))
-    seg_miss_rate_set.append(get_result("../result_set/" + tName + "/opt_" + tName + "_segment_miss"))
+    # seg_miss_rate_set.append(get_result("../result_set/" + tName + "/opt_" + tName + "_segment_miss"))
     seg_size = [i for i in range(len(seg_miss_rate_set[0]))]
     plot(seg_size, seg_miss_rate_set, tName, args)
 

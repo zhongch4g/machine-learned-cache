@@ -1,3 +1,8 @@
+"""
+origin
+
+"""
+
 import sys
 import os
 import numpy as np
@@ -64,7 +69,7 @@ class WriteToFile:
             os.mkdir("../result_set/" + self.tName + "/")  
         except OSError as error:  
             print(error)
-        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_" + self.tName, "w")
+        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_v5_" + self.tName, "w")
 
     
     def write_to_file(self, *args):
@@ -424,7 +429,6 @@ class LIRS_Replace_Algorithm:
         # self.print_stack(v_time)
 
 
-
 def main(t_name, start_predict, mini_batch): 
     # result file
     FILE = WriteToFile(t_name)
@@ -433,8 +437,8 @@ def main(t_name, start_predict, mini_batch):
     # get the trace
     trace, trace_dict, trace_size = trace_obj.get_trace()
     memory_size = trace_obj.get_parameter()
-    memory_size = [200]
-    # print(memory_size)
+    # memory_size = [100]
+
     for memory in memory_size:
         # model = SGDClassifier(loss="log", eta0=1, learning_rate="adaptive", penalty="l2")
         model = BernoulliNB()

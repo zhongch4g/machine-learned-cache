@@ -163,8 +163,8 @@ class LIRS:
         print("in stack miss: ", self.in_stack_miss, "out stack hit: ", self.out_stack_hit, "out stack miss: ", self.out_stack_miss)
     
 if __name__ == "__main__":
-    if (len(sys.argv) != 2):
-        raise("Argument Error")
+    # if (len(sys.argv) != 2):
+    #     raise("Argument Error")
 
     # Read the trace
     tName = sys.argv[1]
@@ -173,6 +173,9 @@ if __name__ == "__main__":
         for line in f.readlines():
             if not line == "*\n":
                 trace.append(int(line))
+    cache = None
+    if (len(sys.argv) == 3):
+        cache = int(sys.argv[2])
 
     # Get the block range of the trace
     vm_size = max(trace)
@@ -194,12 +197,15 @@ if __name__ == "__main__":
 
     # Get the trace parameter
     MAX_MEMORY = []
-    with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
-        inputFile = inputFile.readlines()
-    for line in inputFile:
-        if not line == "*\n":
-            MAX_MEMORY.append(int(line))
-    # MAX_MEMORY = [200]
+    if (not cache):
+        with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
+            inputFile = inputFile.readlines()
+        for line in inputFile:
+            if not line == "*\n":
+                MAX_MEMORY.append(int(line))
+    else:
+        MAX_MEMORY = [cache]
+
     for mem in MAX_MEMORY:
         lirs = LIRS(tName, trace, mem, result, info)
         lirs.LIRS_Replace_Algorithm()

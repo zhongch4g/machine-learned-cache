@@ -1,6 +1,7 @@
-traces=(2_pools cpp cs cs_long gli multi1 multi2)
-start=(1000 3000 5000 7000)
-# start=(1000)
+# traces=(2_pools cpp cs cs_long gli multi1 multi2)
+traces=(sprite)
+# start=(1000 3000 5000 7000)
+start=(20000)
 for i in "${traces[@]}"
 do
     for j in "${start[@]}"
