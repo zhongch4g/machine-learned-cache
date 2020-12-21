@@ -1,10 +1,14 @@
 """
+model: naive bayes
+
 training data collection
 1. re-access
 2. demote from Rmax
 
-add feature
-hit/miss
+time to predict: use start time parameter
+
+feature:
+1. flattened position 2. is hir before
 
 """
 
@@ -68,13 +72,13 @@ class Trace:
         return self.memory_size
 
 class WriteToFile:
-    def __init__(self, tName):
+    def __init__(self, tName, st):
         self.tName = tName
         try:  
             os.mkdir("../result_set/" + self.tName + "/")  
         except OSError as error:  
             print(error)
-        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_v6_" + self.tName, "w")
+        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_v6_" + str(st) + "_" + self.tName, "w")
 
     
     def write_to_file(self, *args):
@@ -83,9 +87,9 @@ class WriteToFile:
         self.FILE.write(data + "\n")
 
 class Segment_Miss:
-    def __init__(self, tName):
+    def __init__(self, tName, cache):
         self.tName = tName
-        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_" + self.tName + "_segment_miss", "w")
+        self.FILE = open("../result_set/" + self.tName + "/ml_lirs_v6_" + self.tName + "_" + str(cache) + "_segment_miss", "w")
     def record(self, segment_miss_ratio):
         self.FILE.write(str(segment_miss_ratio) + "\n")
 
@@ -140,7 +144,7 @@ class LIRS_Replace_Algorithm:
         # segment miss
         self.epoch = self.trace_size // 100
         self.last_miss = 0
-        self.seg_file = Segment_Miss(t_name)
+        self.seg_file = Segment_Miss(t_name, mem_size)
         self.positive_sampler = 0
         self.negative_sampler = 0
 
@@ -215,7 +219,7 @@ class LIRS_Replace_Algorithm:
             raise("Warning Rmax0 \n")
         while (self.Rmax.is_hir == True):
             # collect negative sampler
-            self.collect_sampler(self.Rmax.block_number, -1, self.Rmax.position, [self.Rmax.last_is_hir], [self.page_table[self.Rmax.block_number].is_last_hit])
+            self.collect_sampler(self.Rmax.block_number, -1, self.Rmax.position, [self.Rmax.last_is_hir])
 
             self.Rmax.recency = False
 
@@ -315,7 +319,7 @@ class LIRS_Replace_Algorithm:
             self.seg_file.record(segment_miss/self.epoch * 100)
             self.last_miss = self.page_fault
             # print(self.lir_size)
-            print(self.train)
+            # print(self.train)
 
         if not self.page_table[ref_block].recency:
             self.out_stack_hit += 1
@@ -355,9 +359,9 @@ class LIRS_Replace_Algorithm:
             
             if (self.page_table[ref_block].recency):
                 # collect positive sampler
-                self.collect_sampler(ref_block, 1, self.page_table[ref_block].position, [self.page_table[ref_block].last_is_hir], [self.page_table[ref_block].is_last_hit])
+                self.collect_sampler(ref_block, 1, self.page_table[ref_block].position, [self.page_table[ref_block].last_is_hir])
             else:
-                self.collect_sampler(ref_block, -1, self.page_table[ref_block].position, [self.page_table[ref_block].last_is_hir], [self.page_table[ref_block].is_last_hit])
+                self.collect_sampler(ref_block, -1, self.page_table[ref_block].position, [self.page_table[ref_block].last_is_hir])
         
         # when use the data to predict the model
         if (self.count_exampler > self.start_use_model and self.Free_Memory_Size == 0):
@@ -373,7 +377,7 @@ class LIRS_Replace_Algorithm:
 
         # start predict
         if (self.train):
-            feature = np.array([self.page_table[ref_block].position + [self.page_table[ref_block].is_hir] + [self.page_table[ref_block].is_last_hit]])
+            feature = np.array([self.page_table[ref_block].position + [self.page_table[ref_block].is_hir]])
             prediction = self.model.predict(feature.reshape(1, -1))
             self.predict_times += 1
 
@@ -442,9 +446,9 @@ class LIRS_Replace_Algorithm:
 
 def main(t_name, start_predict, mini_batch, cache=None): 
     # result file
-    FILE = WriteToFile(t_name)
+    FILE = WriteToFile(t_name, start_predict)
     # get trace(lirs_trace/lirs2_trace)
-    trace_obj = Trace(t_name, "lirs_trace")
+    trace_obj = Trace(t_name, "lirs2_trace")
     # get the trace
     trace, trace_dict, trace_size = trace_obj.get_trace()
     memory_size = None

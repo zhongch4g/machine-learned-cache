@@ -6,7 +6,7 @@ import sys
 WORK_SPACE = './myLirs/'
 
 markers = ['X', 'o', 'v', '.', '+', '1']
-algo = ['LIRS', 'ML-LIRS', 'OPT']
+algo = ['LIRS2', 'ML-LIRS', 'LIRS']
 colors = ['c', 'm', 'b']
 
 def plot(X, Y, tName, args):
@@ -22,7 +22,7 @@ def plot(X, Y, tName, args):
     Set y axis begin at 0
     """
     plt.ylim(bottom=0)
-    plt.savefig("../graph/segment_miss/" + tName + args, dpi=300, bbox_inches='tight', pad_inches=0)
+    plt.savefig("../graph/segment_miss/v9/" + tName + "_" + args, dpi=300, bbox_inches='tight', pad_inches=0)
     plt.close()
         
 def get_result(path):
@@ -41,16 +41,19 @@ def get_result(path):
     
     
 if __name__ == "__main__":
-    if (len(sys.argv) != 3):
-        raise("Argument Error")
+    # if (len(sys.argv) != 3):
+    #     raise("Argument Error")
     tName = sys.argv[1]
-    args = sys.argv[2]
+    cache = sys.argv[2]
+    args = sys.argv[3]
 
     seg_miss_rate_set = []
-    seg_miss_rate_set.append(get_result("../result_set/" + tName + "/lirs_" + tName + "_segment_miss"))
-    seg_miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_" + tName + "_segment_miss"))
+    # seg_miss_rate_set.append(get_result("../result_set/" + tName + "/lirs_" + tName + "_segment_miss"))
+    seg_miss_rate_set.append(get_result("../result_set/" + tName + "/LIRS2_" + cache + "_SEQ_MISS"))
+    seg_miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_v9_" + tName + "_" + cache + "_segment_miss"))
+    seg_miss_rate_set.append(get_result("../result_set/" + tName + "/LIRS_" + cache + "_SEQ_MISS"))
     # seg_miss_rate_set.append(get_result("../result_set/" + tName + "/opt_" + tName + "_segment_miss"))
     seg_size = [i for i in range(len(seg_miss_rate_set[0]))]
-    plot(seg_size, seg_miss_rate_set, tName, args)
+    plot(seg_size, seg_miss_rate_set, tName, cache)
 
 

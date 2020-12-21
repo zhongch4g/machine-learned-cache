@@ -1,0 +1,1049 @@
+[Errno 17] File exists: '../result_set/w083/'
+======== Results ========
+trace :  w083
+memory size :  200
+trace_size :  6945114
+Q size :  2.0
+page hit :  2924141
+page fault :  4020973
+Hit ratio:  42.10357094210405
+Out stack hit :  3687888
+Positive sampler:  165 Negative sampler:  368
+Predict Times = 5297881 H->L 365563 L->H 0 H->H 3742442 L->L 1189876
+======== Results ========
+trace :  w083
+memory size :  65736
+trace_size :  6945114
+Q size :  657.36
+page hit :  4275424
+page fault :  2669690
+Hit ratio:  61.560170214628585
+Out stack hit :  2452155
+Positive sampler:  290 Negative sampler:  243
+Predict Times = 5004669 H->L 276799 L->H 0 H->H 2440833 L->L 2287037
+======== Results ========
+trace :  w083
+memory size :  131272
+trace_size :  6945114
+Q size :  1312.72
+page hit :  4347996
+page fault :  2597118
+Hit ratio:  62.60510626607425
+Out stack hit :  2367051
+Positive sampler:  300 Negative sampler:  233
+Predict Times = 4908221 H->L 330879 L->H 0 H->H 2238265 L->L 2339077
+======== Results ========
+trace :  w083
+memory size :  196808
+trace_size :  6945114
+Q size :  1968.0800000000002
+page hit :  4443019
+page fault :  2502095
+Hit ratio:  63.97330554977211
+Out stack hit :  2285495
+Positive sampler:  308 Negative sampler:  225
+Predict Times = 4832132 H->L 312522 L->H 0 H->H 2088524 L->L 2431086
+======== Results ========
+trace :  w083
+memory size :  262344
+trace_size :  6945114
+Q size :  2623.44
+page hit :  4541276
+page fault :  2403838
+Hit ratio:  65.3880699438483
+Out stack hit :  2209350
+Positive sampler:  314 Negative sampler:  219
+Predict Times = 4710339 H->L 283322 L->H 0 H->H 1946905 L->L 2480112
+======== Results ========
+trace :  w083
+memory size :  327880
+trace_size :  6945114
+Q size :  3278.8
+page hit :  4609270
+page fault :  2335844
+Hit ratio:  66.36708915073244
+Out stack hit :  2139532
+Positive sampler:  320 Negative sampler:  213
+Predict Times = 4603987 H->L 277094 L->H 0 H->H 1811382 L->L 2515511
+======== Results ========
+trace :  w083
+memory size :  393416
+trace_size :  6945114
+Q size :  3934.1600000000003
+page hit :  4709196
+page fault :  2235918
+Hit ratio:  67.80588482780844
+Out stack hit :  2075652
+Positive sampler:  330 Negative sampler:  203
+Predict Times = 4509436 H->L 239053 L->H 0 H->H 1681858 L->L 2588525
+======== Results ========
+trace :  w083
+memory size :  458952
+trace_size :  6945114
+Q size :  4589.52
+page hit :  4914385
+page fault :  2030729
+Hit ratio:  70.76032157283524
+Out stack hit :  1969970
+Positive sampler:  338 Negative sampler:  195
+Predict Times = 4419362 H->L 122162 L->H 0 H->H 1510980 L->L 2786220
+======== Results ========
+trace :  w083
+memory size :  524488
+trace_size :  6945114
+Q size :  5244.88
+page hit :  5026188
+page fault :  1918926
+Hit ratio:  72.37012956158819
+Out stack hit :  1894733
+Positive sampler:  344 Negative sampler:  189
+Predict Times = 4350919 H->L 91140 L->H 0 H->H 1370243 L->L 2889536
+======== Results ========
+trace :  w083
+memory size :  590024
+trace_size :  6945114
+Q size :  5900.24
+page hit :  5106580
+page fault :  1838534
+Hit ratio:  73.52766275686763
+Out stack hit :  1823604
+Positive sampler:  353 Negative sampler:  180
+Predict Times = 4282675 H->L 72041 L->H 0 H->H 1233517 L->L 2977117
+======== Results ========
+trace :  w083
+memory size :  655560
+trace_size :  6945114
+Q size :  6555.6
+page hit :  5173540
+page fault :  1771574
+Hit ratio:  74.49179379920906
+Out stack hit :  1757518
+Positive sampler:  359 Negative sampler:  174
+Predict Times = 4212834 H->L 68499 L->H 0 H->H 1101932 L->L 3042403
+======== Results ========
+trace :  w083
+memory size :  721096
+trace_size :  6945114
+Q size :  7210.96
+page hit :  5246194
+page fault :  1698920
+Hit ratio:  75.53791053681769
+Out stack hit :  1686236
+Positive sampler:  366 Negative sampler:  167
+Predict Times = 4128398 H->L 53681 L->H 0 H->H 964148 L->L 3110569
+======== Results ========
+trace :  w083
+memory size :  786632
+trace_size :  6945114
+Q size :  7866.320000000001
+page hit :  5317142
+page fault :  1627972
+Hit ratio:  76.55946324279198
+Out stack hit :  1618956
+Positive sampler:  372 Negative sampler:  161
+Predict Times = 4049216 H->L 47225 L->H 0 H->H 831978 L->L 3170013
+======== Results ========
+trace :  w083
+memory size :  852168
+trace_size :  6945114
+Q size :  8521.68
+page hit :  5384993
+page fault :  1560121
+Hit ratio:  77.53642344819683
+Out stack hit :  1553402
+Positive sampler:  379 Negative sampler:  154
+Predict Times = 3972276 H->L 47302 L->H 0 H->H 701073 L->L 3223901
+======== Results ========
+trace :  w083
+memory size :  917704
+trace_size :  6945114
+Q size :  9177.04
+page hit :  5448879
+page fault :  1496235
+Hit ratio:  78.45629315803887
+Out stack hit :  1487269
+Positive sampler:  387 Negative sampler:  146
+Predict Times = 3895125 H->L 45719 L->H 0 H->H 569454 L->L 3279952
+======== Results ========
+trace :  w083
+memory size :  983240
+trace_size :  6945114
+Q size :  9832.4
+page hit :  5514462
+page fault :  1430652
+Hit ratio:  79.40059731200957
+Out stack hit :  1421274
+Positive sampler:  394 Negative sampler:  139
+Predict Times = 3825804 H->L 43829 L->H 0 H->H 437979 L->L 3343996
+======== Results ========
+trace :  w083
+memory size :  1048776
+trace_size :  6945114
+Q size :  10487.76
+page hit :  5579993
+page fault :  1365121
+Hit ratio:  80.3441527381696
+Out stack hit :  1354000
+Positive sampler:  401 Negative sampler:  132
+Predict Times = 3749688 H->L 40383 L->H 0 H->H 305110 L->L 3404195
+======== Results ========
+trace :  w083
+memory size :  1114312
+trace_size :  6945114
+Q size :  11143.12
+page hit :  5651975
+page fault :  1293139
+Hit ratio:  81.38059360868662
+Out stack hit :  1282322
+Positive sampler:  408 Negative sampler:  125
+Predict Times = 3682993 H->L 28428 L->H 0 H->H 167980 L->L 3486585
+======== Results ========
+trace :  w083
+memory size :  1179848
+trace_size :  6945114
+Q size :  11798.48
+page hit :  5717338
+page fault :  1227776
+Hit ratio:  82.32173006807376
+Out stack hit :  1223632
+Positive sampler:  415 Negative sampler:  118
+Predict Times = 3608880 H->L 41358 L->H 0 H->H 28151 L->L 3539371
+======== Results ========
+trace :  w083
+memory size :  1245384
+trace_size :  6945114
+Q size :  12453.84
+page hit :  5744063
+page fault :  1201051
+Hit ratio:  82.70653296691745
+Out stack hit :  1201051
+Positive sampler:  416 Negative sampler:  117
+Predict Times = 0 H->L 0 L->H 0 H->H 0 L->L 0
+[Errno 17] File exists: '../result_set/w083/'
+======== Results ========
+trace :  w083
+memory size :  200
+trace_size :  6945114
+Q size :  2.0
+page hit :  3084035
+page fault :  3861079
+Hit ratio:  44.40582256821126
+Out stack hit :  4329653
+Predict Times = 5304953 H->L 462720 L->H 196 H->H 4441450 L->L 399539
+======== Results ========
+trace :  w083
+memory size :  65736
+trace_size :  6945114
+Q size :  657.36
+page hit :  4277380
+page fault :  2667734
+Hit ratio:  61.58833389919878
+Out stack hit :  2421603
+Predict Times = 5004669 H->L 221852 L->H 4772 H->H 2522961 L->L 2255084
+======== Results ========
+trace :  w083
+memory size :  131272
+trace_size :  6945114
+Q size :  1312.72
+page hit :  4402414
+page fault :  2542700
+Hit ratio:  63.38864991992932
+Out stack hit :  2211629
+Predict Times = 4908221 H->L 290375 L->H 9148 H->H 2212026 L->L 2396672
+======== Results ========
+trace :  w083
+memory size :  196808
+trace_size :  6945114
+Q size :  1968.0800000000002
+page hit :  4454102
+page fault :  2491012
+Hit ratio:  64.13288536372477
+Out stack hit :  2233157
+Predict Times = 4832132 H->L 267088 L->H 1940 H->H 2122927 L->L 2440177
+======== Results ========
+trace :  w083
+memory size :  262344
+trace_size :  6945114
+Q size :  2623.44
+page hit :  4587940
+page fault :  2357174
+Hit ratio:  66.05996676224464
+Out stack hit :  2182713
+Predict Times = 4710339 H->L 187224 L->H 2970 H->H 2015471 L->L 2504674
+======== Results ========
+trace :  w083
+memory size :  327880
+trace_size :  6945114
+Q size :  3278.8
+page hit :  4667420
+page fault :  2277694
+Hit ratio:  67.20436842361407
+Out stack hit :  2114337
+Predict Times = 4603987 H->L 178642 L->H 2394 H->H 1864090 L->L 2558861
+======== Results ========
+trace :  w083
+memory size :  393416
+trace_size :  6945114
+Q size :  3934.1600000000003
+page hit :  4785187
+page fault :  2159927
+Hit ratio:  68.90004973280496
+Out stack hit :  1783573
+Predict Times = 4509436 H->L 176826 L->H 276 H->H 1653236 L->L 2679098
+======== Results ========
+trace :  w083
+memory size :  458952
+trace_size :  6945114
+Q size :  4589.52
+page hit :  4926826
+page fault :  2018288
+Hit ratio:  70.9394547015355
+Out stack hit :  1951822
+Predict Times = 4419362 H->L 99538 L->H 1236 H->H 1516572 L->L 2802016
+======== Results ========
+trace :  w083
+memory size :  524488
+trace_size :  6945114
+Q size :  5244.88
+page hit :  5021290
+page fault :  1923824
+Hit ratio:  72.29960516126877
+Out stack hit :  1854929
+Predict Times = 4350919 H->L 91389 L->H 72 H->H 1354925 L->L 2904533
+======== Results ========
+trace :  w083
+memory size :  590024
+trace_size :  6945114
+Q size :  5900.24
+page hit :  5105542
+page fault :  1839572
+Hit ratio:  73.51271699787793
+Out stack hit :  1627567
+Predict Times = 4282675 H->L 76947 L->H 0 H->H 1214088 L->L 2991640
+======== Results ========
+trace :  w083
+memory size :  655560
+trace_size :  6945114
+Q size :  6555.6
+page hit :  5174126
+page fault :  1770988
+Hit ratio:  74.50023138569073
+Out stack hit :  1453865
+Predict Times = 4212834 H->L 66291 L->H 0 H->H 1082586 L->L 3063957
+======== Results ========
+trace :  w083
+memory size :  721096
+trace_size :  6945114
+Q size :  7210.96
+page hit :  5246466
+page fault :  1698648
+Hit ratio:  75.5418269592119
+Out stack hit :  1420186
+Predict Times = 4128398 H->L 54510 L->H 0 H->H 950515 L->L 3123373
+======== Results ========
+trace :  w083
+memory size :  786632
+trace_size :  6945114
+Q size :  7866.320000000001
+page hit :  5317018
+page fault :  1628096
+Hit ratio:  76.5576778149358
+Out stack hit :  1490347
+Predict Times = 4049216 H->L 48610 L->H 0 H->H 818752 L->L 3181854
+======== Results ========
+trace :  w083
+memory size :  852168
+trace_size :  6945114
+Q size :  8521.68
+page hit :  5385038
+page fault :  1560076
+Hit ratio:  77.53707138572527
+Out stack hit :  1461018
+Predict Times = 3972276 H->L 49113 L->H 0 H->H 688022 L->L 3235141
+======== Results ========
+trace :  w083
+memory size :  917704
+trace_size :  6945114
+Q size :  9177.04
+page hit :  5448965
+page fault :  1496149
+Hit ratio:  78.45753143864881
+Out stack hit :  1466249
+Predict Times = 3895125 H->L 47591 L->H 0 H->H 557347 L->L 3290187
+======== Results ========
+trace :  w083
+memory size :  983240
+trace_size :  6945114
+Q size :  9832.4
+page hit :  5514647
+page fault :  1430467
+Hit ratio:  79.4032610551821
+Out stack hit :  1398694
+Predict Times = 3825804 H->L 45264 L->H 0 H->H 426425 L->L 3354115
+======== Results ========
+trace :  w083
+memory size :  1048776
+trace_size :  6945114
+Q size :  10487.76
+page hit :  5579800
+page fault :  1365314
+Hit ratio:  80.3413738061031
+Out stack hit :  1355347
+Predict Times = 3749688 H->L 42115 L->H 0 H->H 294926 L->L 3412647
+======== Results ========
+trace :  w083
+memory size :  1114312
+trace_size :  6945114
+Q size :  11143.12
+page hit :  5652067
+page fault :  1293047
+Hit ratio:  81.38191828096703
+Out stack hit :  1273576
+Predict Times = 3682993 H->L 29260 L->H 0 H->H 163865 L->L 3489868
+======== Results ========
+trace :  w083
+memory size :  1179848
+trace_size :  6945114
+Q size :  11798.48
+page hit :  5717420
+page fault :  1227694
+Hit ratio:  82.32291075423672
+Out stack hit :  1223828
+Predict Times = 3608880 H->L 41706 L->H 0 H->H 24400 L->L 3542774
+======== Results ========
+trace :  w083
+memory size :  1245384
+trace_size :  6945114
+Q size :  12453.84
+page hit :  5744063
+page fault :  1201051
+Hit ratio:  82.70653296691745
+Out stack hit :  1201051
+Predict Times = 0 H->L 0 L->H 0 H->H 0 L->L 0
+[Errno 17] File exists: '../result_set/w083/'
+======== Results ========
+trace :  w083
+memory size :  200
+trace_size :  6945114
+Q size :  2.0
+page hit :  3086165
+page fault :  3858949
+Hit ratio:  44.43649161122481
+Out stack hit :  4100530
+Predict Times = 5304953 H->L 30338 L->H 196 H->H 4912413 L->L 359401
+======== Results ========
+trace :  w083
+memory size :  65736
+trace_size :  6945114
+Q size :  657.36
+page hit :  4282836
+page fault :  2662278
+Hit ratio:  61.66689272487103
+Out stack hit :  2425127
+Predict Times = 5004669 H->L 253165 L->H 15935 H->H 2495249 L->L 2240320
+======== Results ========
+trace :  w083
+memory size :  131272
+trace_size :  6945114
+Q size :  1312.72
+page hit :  4412577
+page fault :  2532537
+Hit ratio:  63.534983011078005
+Out stack hit :  2189155
+Predict Times = 4908221 H->L 247629 L->H 3246 H->H 2264786 L->L 2392560
+======== Results ========
+trace :  w083
+memory size :  196808
+trace_size :  6945114
+Q size :  1968.0800000000002
+page hit :  4435786
+page fault :  2509328
+Hit ratio:  63.86916039103174
+Out stack hit :  2248662
+Predict Times = 4832132 H->L 316947 L->H 19585 H->H 2118841 L->L 2376759
+======== Results ========
+trace :  w083
+memory size :  262344
+trace_size :  6945114
+Q size :  2623.44
+page hit :  4537672
+page fault :  2407442
+Hit ratio:  65.3361773471249
+Out stack hit :  2209326
+Predict Times = 4710339 H->L 292139 L->H 20668 H->H 1968687 L->L 2428845
+======== Results ========
+trace :  w083
+memory size :  327880
+trace_size :  6945114
+Q size :  3278.8
+page hit :  4605764
+page fault :  2339350
+Hit ratio:  66.31660761795992
+Out stack hit :  2139530
+Predict Times = 4603987 H->L 286689 L->H 20420 H->H 1831319 L->L 2465559
+======== Results ========
+trace :  w083
+memory size :  393416
+trace_size :  6945114
+Q size :  3934.1600000000003
+page hit :  4700384
+page fault :  2244730
+Hit ratio:  67.67900426112516
+Out stack hit :  2075629
+Predict Times = 4509436 H->L 249575 L->H 17943 H->H 1696463 L->L 2545455
+======== Results ========
+trace :  w083
+memory size :  458952
+trace_size :  6945114
+Q size :  4589.52
+page hit :  4913220
+page fault :  2031894
+Hit ratio:  70.7435471901541
+Out stack hit :  1969302
+Predict Times = 4419362 H->L 117786 L->H 0 H->H 1519403 L->L 2782173
+======== Results ========
+trace :  w083
+memory size :  524488
+trace_size :  6945114
+Q size :  5244.88
+page hit :  5026987
+page fault :  1918127
+Hit ratio:  72.3816340523712
+Out stack hit :  1655227
+Predict Times = 4350919 H->L 87375 L->H 0 H->H 1372896 L->L 2890648
+======== Results ========
+trace :  w083
+memory size :  590024
+trace_size :  6945114
+Q size :  5900.24
+page hit :  5107036
+page fault :  1838078
+Hit ratio:  73.53422852382265
+Out stack hit :  1472919
+Predict Times = 4282675 H->L 65428 L->H 0 H->H 1229488 L->L 2987759
+======== Results ========
+trace :  w083
+memory size :  655560
+trace_size :  6945114
+Q size :  6555.6
+page hit :  5173831
+page fault :  1771283
+Hit ratio:  74.4959837952264
+Out stack hit :  1488929
+Predict Times = 4212834 H->L 63189 L->H 0 H->H 1098734 L->L 3050911
+======== Results ========
+trace :  w083
+memory size :  721096
+trace_size :  6945114
+Q size :  7210.96
+page hit :  5246635
+page fault :  1698479
+Hit ratio:  75.54426032459655
+Out stack hit :  1464003
+Predict Times = 4128398 H->L 52346 L->H 0 H->H 964280 L->L 3111772
+======== Results ========
+trace :  w083
+memory size :  786632
+trace_size :  6945114
+Q size :  7866.320000000001
+page hit :  5317484
+page fault :  1627630
+Hit ratio:  76.56438756800824
+Out stack hit :  1465637
+Predict Times = 4049216 H->L 45870 L->H 0 H->H 831311 L->L 3172035
+======== Results ========
+trace :  w083
+memory size :  852168
+trace_size :  6945114
+Q size :  8521.68
+page hit :  5385276
+page fault :  1559838
+Hit ratio:  77.54049825532022
+Out stack hit :  1442226
+Predict Times = 3972276 H->L 45980 L->H 0 H->H 700402 L->L 3225894
+======== Results ========
+trace :  w083
+memory size :  917704
+trace_size :  6945114
+Q size :  9177.04
+page hit :  5449227
+page fault :  1495887
+Hit ratio:  78.46130387492559
+Out stack hit :  1441553
+Predict Times = 3895125 H->L 44498 L->H 0 H->H 568824 L->L 3281803
+======== Results ========
+trace :  w083
+memory size :  983240
+trace_size :  6945114
+Q size :  9832.4
+page hit :  5514947
+page fault :  1430167
+Hit ratio:  79.40758063870513
+Out stack hit :  1390067
+Predict Times = 3825804 H->L 42725 L->H 0 H->H 437437 L->L 3345642
+======== Results ========
+trace :  w083
+memory size :  1048776
+trace_size :  6945114
+Q size :  10487.76
+page hit :  5580018
+page fault :  1365096
+Hit ratio:  80.34451270346318
+Out stack hit :  1353952
+Predict Times = 3749688 H->L 40316 L->H 0 H->H 305118 L->L 3404254
+======== Results ========
+trace :  w083
+memory size :  1114312
+trace_size :  6945114
+Q size :  11143.12
+page hit :  5651990
+page fault :  1293124
+Hit ratio:  81.38080958786279
+Out stack hit :  1251161
+Predict Times = 3682993 H->L 27927 L->H 0 H->H 168010 L->L 3487056
+======== Results ========
+trace :  w083
+memory size :  1179848
+trace_size :  6945114
+Q size :  11798.48
+page hit :  5717338
+page fault :  1227776
+Hit ratio:  82.32173006807376
+Out stack hit :  1223632
+Predict Times = 3608880 H->L 41358 L->H 0 H->H 28151 L->L 3539371
+======== Results ========
+trace :  w083
+memory size :  1245384
+trace_size :  6945114
+Q size :  12453.84
+page hit :  5744063
+page fault :  1201051
+Hit ratio:  82.70653296691745
+Out stack hit :  1201051
+Predict Times = 0 H->L 0 L->H 0 H->H 0 L->L 0
+[Errno 17] File exists: '../result_set/w083/'
+======== Results ========
+trace :  w083
+memory size :  200
+trace_size :  6945114
+Q size :  2.0
+page hit :  2924141
+page fault :  4020973
+Hit ratio:  42.10357094210405
+Out stack hit :  3687888
+Positive sampler:  165 Negative sampler:  368
+Predict Times = 5277881 H->L 363809 L->H 0 H->H 3729083 L->L 1184989
+======== Results ========
+trace :  w083
+memory size :  65736
+trace_size :  6945114
+Q size :  657.36
+page hit :  4275424
+page fault :  2669690
+Hit ratio:  61.560170214628585
+Out stack hit :  2452155
+Positive sampler:  290 Negative sampler:  243
+Predict Times = 5004669 H->L 276799 L->H 0 H->H 2440833 L->L 2287037
+======== Results ========
+trace :  w083
+memory size :  131272
+trace_size :  6945114
+Q size :  1312.72
+page hit :  4347996
+page fault :  2597118
+Hit ratio:  62.60510626607425
+Out stack hit :  2367051
+Positive sampler:  300 Negative sampler:  233
+Predict Times = 4908221 H->L 330879 L->H 0 H->H 2238265 L->L 2339077
+======== Results ========
+trace :  w083
+memory size :  196808
+trace_size :  6945114
+Q size :  1968.0800000000002
+page hit :  4443019
+page fault :  2502095
+Hit ratio:  63.97330554977211
+Out stack hit :  2285495
+Positive sampler:  308 Negative sampler:  225
+Predict Times = 4832132 H->L 312522 L->H 0 H->H 2088524 L->L 2431086
+======== Results ========
+trace :  w083
+memory size :  262344
+trace_size :  6945114
+Q size :  2623.44
+page hit :  4541276
+page fault :  2403838
+Hit ratio:  65.3880699438483
+Out stack hit :  2209350
+Positive sampler:  314 Negative sampler:  219
+Predict Times = 4710339 H->L 283322 L->H 0 H->H 1946905 L->L 2480112
+======== Results ========
+trace :  w083
+memory size :  327880
+trace_size :  6945114
+Q size :  3278.8
+page hit :  4609270
+page fault :  2335844
+Hit ratio:  66.36708915073244
+Out stack hit :  2139532
+Positive sampler:  320 Negative sampler:  213
+Predict Times = 4603987 H->L 277094 L->H 0 H->H 1811382 L->L 2515511
+======== Results ========
+trace :  w083
+memory size :  393416
+trace_size :  6945114
+Q size :  3934.1600000000003
+page hit :  4709196
+page fault :  2235918
+Hit ratio:  67.80588482780844
+Out stack hit :  2075652
+Positive sampler:  330 Negative sampler:  203
+Predict Times = 4509436 H->L 239053 L->H 0 H->H 1681858 L->L 2588525
+======== Results ========
+trace :  w083
+memory size :  458952
+trace_size :  6945114
+Q size :  4589.52
+page hit :  4914385
+page fault :  2030729
+Hit ratio:  70.76032157283524
+Out stack hit :  1969970
+Positive sampler:  338 Negative sampler:  195
+Predict Times = 4419362 H->L 122162 L->H 0 H->H 1510980 L->L 2786220
+======== Results ========
+trace :  w083
+memory size :  524488
+trace_size :  6945114
+Q size :  5244.88
+page hit :  5026188
+page fault :  1918926
+Hit ratio:  72.37012956158819
+Out stack hit :  1894733
+Positive sampler:  344 Negative sampler:  189
+Predict Times = 4350919 H->L 91140 L->H 0 H->H 1370243 L->L 2889536
+======== Results ========
+trace :  w083
+memory size :  590024
+trace_size :  6945114
+Q size :  5900.24
+page hit :  5106580
+page fault :  1838534
+Hit ratio:  73.52766275686763
+Out stack hit :  1823604
+Positive sampler:  353 Negative sampler:  180
+Predict Times = 4282675 H->L 72041 L->H 0 H->H 1233517 L->L 2977117
+======== Results ========
+trace :  w083
+memory size :  655560
+trace_size :  6945114
+Q size :  6555.6
+page hit :  5173540
+page fault :  1771574
+Hit ratio:  74.49179379920906
+Out stack hit :  1757518
+Positive sampler:  359 Negative sampler:  174
+Predict Times = 4212834 H->L 68499 L->H 0 H->H 1101932 L->L 3042403
+======== Results ========
+trace :  w083
+memory size :  721096
+trace_size :  6945114
+Q size :  7210.96
+page hit :  5246194
+page fault :  1698920
+Hit ratio:  75.53791053681769
+Out stack hit :  1686236
+Positive sampler:  366 Negative sampler:  167
+Predict Times = 4128398 H->L 53681 L->H 0 H->H 964148 L->L 3110569
+======== Results ========
+trace :  w083
+memory size :  786632
+trace_size :  6945114
+Q size :  7866.320000000001
+page hit :  5317142
+page fault :  1627972
+Hit ratio:  76.55946324279198
+Out stack hit :  1618956
+Positive sampler:  372 Negative sampler:  161
+Predict Times = 4049216 H->L 47225 L->H 0 H->H 831978 L->L 3170013
+======== Results ========
+trace :  w083
+memory size :  852168
+trace_size :  6945114
+Q size :  8521.68
+page hit :  5384993
+page fault :  1560121
+Hit ratio:  77.53642344819683
+Out stack hit :  1553402
+Positive sampler:  379 Negative sampler:  154
+Predict Times = 3972276 H->L 47302 L->H 0 H->H 701073 L->L 3223901
+======== Results ========
+trace :  w083
+memory size :  917704
+trace_size :  6945114
+Q size :  9177.04
+page hit :  5448879
+page fault :  1496235
+Hit ratio:  78.45629315803887
+Out stack hit :  1487269
+Positive sampler:  387 Negative sampler:  146
+Predict Times = 3895125 H->L 45719 L->H 0 H->H 569454 L->L 3279952
+======== Results ========
+trace :  w083
+memory size :  983240
+trace_size :  6945114
+Q size :  9832.4
+page hit :  5514462
+page fault :  1430652
+Hit ratio:  79.40059731200957
+Out stack hit :  1421274
+Positive sampler:  394 Negative sampler:  139
+Predict Times = 3825804 H->L 43829 L->H 0 H->H 437979 L->L 3343996
+======== Results ========
+trace :  w083
+memory size :  1048776
+trace_size :  6945114
+Q size :  10487.76
+page hit :  5579993
+page fault :  1365121
+Hit ratio:  80.3441527381696
+Out stack hit :  1354000
+Positive sampler:  401 Negative sampler:  132
+Predict Times = 3749688 H->L 40383 L->H 0 H->H 305110 L->L 3404195
+======== Results ========
+trace :  w083
+memory size :  1114312
+trace_size :  6945114
+Q size :  11143.12
+page hit :  5651975
+page fault :  1293139
+Hit ratio:  81.38059360868662
+Out stack hit :  1282322
+Positive sampler:  408 Negative sampler:  125
+Predict Times = 3682993 H->L 28428 L->H 0 H->H 167980 L->L 3486585
+======== Results ========
+trace :  w083
+memory size :  1179848
+trace_size :  6945114
+Q size :  11798.48
+page hit :  5717338
+page fault :  1227776
+Hit ratio:  82.32173006807376
+Out stack hit :  1223632
+Positive sampler:  415 Negative sampler:  118
+Predict Times = 3608880 H->L 41358 L->H 0 H->H 28151 L->L 3539371
+======== Results ========
+trace :  w083
+memory size :  1245384
+trace_size :  6945114
+Q size :  12453.84
+page hit :  5744063
+page fault :  1201051
+Hit ratio:  82.70653296691745
+Out stack hit :  1201051
+Positive sampler:  416 Negative sampler:  117
+Predict Times = 0 H->L 0 L->H 0 H->H 0 L->L 0
+[Errno 17] File exists: '../result_set/w083/'
+======== Results ========
+trace :  w083
+memory size :  200
+trace_size :  6945114
+Q size :  2.0
+page hit :  3084162
+page fault :  3860952
+Hit ratio:  44.40765119190268
+Out stack hit :  4303698
+Predict Times = 5290705 H->L 466787 L->H 196 H->H 4439817 L->L 382927
+======== Results ========
+trace :  w083
+memory size :  65736
+trace_size :  6945114
+Q size :  657.36
+page hit :  4277380
+page fault :  2667734
+Hit ratio:  61.58833389919878
+Out stack hit :  2421603
+Predict Times = 5004669 H->L 221852 L->H 4772 H->H 2522961 L->L 2255084
+======== Results ========
+trace :  w083
+memory size :  131272
+trace_size :  6945114
+Q size :  1312.72
+page hit :  4402414
+page fault :  2542700
+Hit ratio:  63.38864991992932
+Out stack hit :  2211629
+Predict Times = 4908221 H->L 290375 L->H 9148 H->H 2212026 L->L 2396672
+======== Results ========
+trace :  w083
+memory size :  196808
+trace_size :  6945114
+Q size :  1968.0800000000002
+page hit :  4454102
+page fault :  2491012
+Hit ratio:  64.13288536372477
+Out stack hit :  2233157
+Predict Times = 4832132 H->L 267088 L->H 1940 H->H 2122927 L->L 2440177
+======== Results ========
+trace :  w083
+memory size :  262344
+trace_size :  6945114
+Q size :  2623.44
+page hit :  4587940
+page fault :  2357174
+Hit ratio:  66.05996676224464
+Out stack hit :  2182713
+Predict Times = 4710339 H->L 187224 L->H 2970 H->H 2015471 L->L 2504674
+======== Results ========
+trace :  w083
+memory size :  327880
+trace_size :  6945114
+Q size :  3278.8
+page hit :  4667420
+page fault :  2277694
+Hit ratio:  67.20436842361407
+Out stack hit :  2114337
+Predict Times = 4603987 H->L 178642 L->H 2394 H->H 1864090 L->L 2558861
+======== Results ========
+trace :  w083
+memory size :  393416
+trace_size :  6945114
+Q size :  3934.1600000000003
+page hit :  4785187
+page fault :  2159927
+Hit ratio:  68.90004973280496
+Out stack hit :  1783573
+Predict Times = 4509436 H->L 176826 L->H 276 H->H 1653236 L->L 2679098
+======== Results ========
+trace :  w083
+memory size :  458952
+trace_size :  6945114
+Q size :  4589.52
+page hit :  4926826
+page fault :  2018288
+Hit ratio:  70.9394547015355
+Out stack hit :  1951822
+Predict Times = 4419362 H->L 99538 L->H 1236 H->H 1516572 L->L 2802016
+======== Results ========
+trace :  w083
+memory size :  524488
+trace_size :  6945114
+Q size :  5244.88
+page hit :  5021290
+page fault :  1923824
+Hit ratio:  72.29960516126877
+Out stack hit :  1854929
+Predict Times = 4350919 H->L 91389 L->H 72 H->H 1354925 L->L 2904533
+======== Results ========
+trace :  w083
+memory size :  590024
+trace_size :  6945114
+Q size :  5900.24
+page hit :  5105542
+page fault :  1839572
+Hit ratio:  73.51271699787793
+Out stack hit :  1627567
+Predict Times = 4282675 H->L 76947 L->H 0 H->H 1214088 L->L 2991640
+======== Results ========
+trace :  w083
+memory size :  655560
+trace_size :  6945114
+Q size :  6555.6
+page hit :  5174126
+page fault :  1770988
+Hit ratio:  74.50023138569073
+Out stack hit :  1453865
+Predict Times = 4212834 H->L 66291 L->H 0 H->H 1082586 L->L 3063957
+======== Results ========
+trace :  w083
+memory size :  721096
+trace_size :  6945114
+Q size :  7210.96
+page hit :  5246466
+page fault :  1698648
+Hit ratio:  75.5418269592119
+Out stack hit :  1420186
+Predict Times = 4128398 H->L 54510 L->H 0 H->H 950515 L->L 3123373
+======== Results ========
+trace :  w083
+memory size :  786632
+trace_size :  6945114
+Q size :  7866.320000000001
+page hit :  5317018
+page fault :  1628096
+Hit ratio:  76.5576778149358
+Out stack hit :  1490347
+Predict Times = 4049216 H->L 48610 L->H 0 H->H 818752 L->L 3181854
+======== Results ========
+trace :  w083
+memory size :  852168
+trace_size :  6945114
+Q size :  8521.68
+page hit :  5385038
+page fault :  1560076
+Hit ratio:  77.53707138572527
+Out stack hit :  1461018
+Predict Times = 3972276 H->L 49113 L->H 0 H->H 688022 L->L 3235141
+======== Results ========
+trace :  w083
+memory size :  917704
+trace_size :  6945114
+Q size :  9177.04
+page hit :  5448965
+page fault :  1496149
+Hit ratio:  78.45753143864881
+Out stack hit :  1466249
+Predict Times = 3895125 H->L 47591 L->H 0 H->H 557347 L->L 3290187
+======== Results ========
+trace :  w083
+memory size :  983240
+trace_size :  6945114
+Q size :  9832.4
+page hit :  5514647
+page fault :  1430467
+Hit ratio:  79.4032610551821
+Out stack hit :  1398694
+Predict Times = 3825804 H->L 45264 L->H 0 H->H 426425 L->L 3354115
+======== Results ========
+trace :  w083
+memory size :  1048776
+trace_size :  6945114
+Q size :  10487.76
+page hit :  5579800
+page fault :  1365314
+Hit ratio:  80.3413738061031
+Out stack hit :  1355347
+Predict Times = 3749688 H->L 42115 L->H 0 H->H 294926 L->L 3412647
+======== Results ========
+trace :  w083
+memory size :  1114312
+trace_size :  6945114
+Q size :  11143.12
+page hit :  5652067
+page fault :  1293047
+Hit ratio:  81.38191828096703
+Out stack hit :  1273576
+Predict Times = 3682993 H->L 29260 L->H 0 H->H 163865 L->L 3489868
+======== Results ========
+trace :  w083
+memory size :  1179848
+trace_size :  6945114
+Q size :  11798.48
+page hit :  5717420
+page fault :  1227694
+Hit ratio:  82.32291075423672
+Out stack hit :  1223828
+Predict Times = 3608880 H->L 41706 L->H 0 H->H 24400 L->L 3542774
+======== Results ========
+trace :  w083
+memory size :  1245384
+trace_size :  6945114
+Q size :  12453.84
+page hit :  5744063
+page fault :  1201051
+Hit ratio:  82.70653296691745
+Out stack hit :  1201051
+Predict Times = 0 H->L 0 L->H 0 H->H 0 L->L 0
+[Errno 17] File exists: '../result_set/w083/'
+[Errno 17] File exists: '../result_set/w083/'
+[Errno 17] File exists: '../result_set/w083/'
+[Errno 17] File exists: '../result_set/w083/'

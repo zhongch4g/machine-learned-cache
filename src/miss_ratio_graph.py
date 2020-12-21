@@ -6,12 +6,21 @@ import sys
 WORK_SPACE = './myLirs/'
 
 markers = ['X', 'o', 'v', '.', '+', '1']
-algo = ['LRU', 'LIRS', 'ML-LIRS', 'OPT']
-colors = ['r', 'c', 'm', 'b']
+# algo = ['LRU', 'LIRS', 'ML-LIRS', 'OPT']
+# colors = ['r', 'c', 'm', 'b']
+# algo = ['LRU', 'LIRS', 'LIRS2', 'ML-LIRS_v6', 'ML-LIRS_v6_1', 'OPT']
+# colors = ['grey', 'c', '#FF7F0E', '#2077B4', '#D62728', '#343434']
+
+# algo = ['LRU', 'LIRS', 'LIRS2', 'ML-LIRS_v6_1', 'OPT']
+# colors = ['grey', 'c', '#FF7F0E', '#D62728', '#343434']
+
+algo = ['LIRS', 'ML-LIRS_v8']
+colors = ['grey', 'c', '#FF7F0E', '#D62728', '#343434']
 
 def plot(X, Y, tName, args):
     for i, y in enumerate(Y):
         y = [float(_) for _ in y]
+        # print(len(X), len(y))
         plt.plot(X, y, color=colors[i], marker=markers[i], label = algo[i], alpha=0.6)
     plt.title(tName)
     plt.xlabel('Cache Size')
@@ -21,7 +30,7 @@ def plot(X, Y, tName, args):
     Set y axis begin at 0
     """
     plt.ylim(bottom=0)
-    plt.savefig("../graph/miss_ratio/v6/" + tName + args)
+    plt.savefig("../graph/miss_ratio/v6_1/" + tName + "_" + args)
     plt.close()
         
 def get_result(path):
@@ -48,21 +57,24 @@ def get_result(path):
     
     
 if __name__ == "__main__":
-    if (len(sys.argv) != 3):
-        raise("Argument Error")
+    # if (len(sys.argv) != 3):
+    #     raise("Argument Error")
     tName = sys.argv[1]
     args = sys.argv[2]
 
     miss_rate_set = []
-    miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-LRU"))
+    # miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-LRU"))
     miss_rate_set.append(get_result("../result_set/" + tName + "/lirs_" + tName))
-    miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_" + tName))
-    miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-OPT"))
+    # miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_v5_"  + args + "_"+ tName))
+    # miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-LIRS2"))
+    # miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_v6_"  + args + "_"+ tName))
+    miss_rate_set.append(get_result("../result_set/" + tName + "/ml_lirs_v6_1_"  + args + "_"+ tName))
+    # miss_rate_set.append(get_result("../result_set/" + tName + "/" + tName + "-OPT"))
 
     # Get the trace parameter
     MAX_MEMORY = []
-    # with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
-    with codecs.open("/home/zhongchen/myLirs/trace_parameter/" + tName, "r", "UTF8") as inputFile:
+    with codecs.open("../cache_size/" + tName, "r", "UTF8") as inputFile:
+    # with codecs.open("/home/zhongchen/myLirs/trace_parameter/" + tName, "r", "UTF8") as inputFile:
         inputFile = inputFile.readlines()
     for line in inputFile:
         if not line == "*\n":
